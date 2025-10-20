@@ -175,3 +175,19 @@
 [2025-10-18T21:39:21.923Z] [SYSTEM] Webhook verified!
 [2025-10-18T21:49:24.582Z] [SYSTEM] ✅ Manual health check recorded.
 [2025-10-18T22:09:43.390Z] [SYSTEM] Webhook verified!
+[2025-10-20T15:49:01.360Z] [SYSTEM] Health monitor started.
+[2025-10-20T15:49:01.365Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-20T15:49:01.381Z] [SYSTEM] Server running on port 3000
+[2025-10-20T15:54:35.783Z] [SYSTEM] Webhook verified!
+[2025-10-20T15:55:51.044Z] [INCOMING] Received from 254117604817: Hi
+[2025-10-20T15:55:55.408Z] [ERROR] GPT error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[2025-10-20T15:55:57.200Z] [OUTGOING] Message sent successfully to 254117604817
+[2025-10-20T15:56:23.536Z] [INCOMING] Received from 254117604817: How are you
+[2025-10-20T15:56:27.909Z] [ERROR] GPT error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[2025-10-20T15:56:28.938Z] [OUTGOING] Message sent successfully to 254117604817
+[2025-10-20T15:56:44.574Z] [INCOMING] Received from 254117604817: I see you are working
+[2025-10-20T15:56:48.802Z] [ERROR] GPT error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[2025-10-20T15:56:50.845Z] [OUTGOING] Message sent successfully to 254117604817
+[2025-10-20T15:57:28.155Z] [INCOMING] Received from 254117604817: Hello
+[2025-10-20T15:57:31.300Z] [ERROR] GPT error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[2025-10-20T15:57:32.427Z] [OUTGOING] Message sent successfully to 254117604817
