@@ -191,3 +191,9 @@
 [2025-10-20T15:57:28.155Z] [INCOMING] Received from 254117604817: Hello
 [2025-10-20T15:57:31.300Z] [ERROR] GPT error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
 [2025-10-20T15:57:32.427Z] [OUTGOING] Message sent successfully to 254117604817
+[2025-10-20T16:00:46.385Z] [INCOMING] Received from 254117604817: Yoh niaje
+[2025-10-20T16:00:49.836Z] [ERROR] GPT error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[2025-10-20T16:00:51.486Z] [OUTGOING] Message sent successfully to 254117604817
+[2025-10-20T16:01:30.442Z] [INCOMING] Received from 254117604817: Ati
+[2025-10-20T16:01:33.711Z] [ERROR] GPT error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[2025-10-20T16:01:34.736Z] [OUTGOING] Message sent successfully to 254117604817
