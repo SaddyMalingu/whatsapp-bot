@@ -177,6 +177,31 @@ async function handleDiagnose(from, text) {
 
 // ... keep handleLogs, handleClearLogs, confirmClearLogs, handleHealthCheck, sendHelpMenu, and generateReply functions exactly as in the last version ...
 
+// ===== GPT REPLY GENERATION =====
+async function generateReply(userMessage) {
+  try {
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content: "You are a helpful WhatsApp assistant for a small business. Be polite, short, and clear.",
+        },
+        { role: "user", content: userMessage },
+      ],
+    });
+
+    const reply = completion.choices[0].message.content;
+    log(`Generated reply: ${reply}`, "AI");
+    return reply;
+  } catch (err) {
+    incrementErrorCount();
+    log(`GPT error: ${err.message}`, "ERROR");
+    return "Sorry, I’m having trouble understanding you right now.";
+  }
+}
+
+
 // ===== START SERVER =====
 app.listen(process.env.PORT, () => {
   log(`Server running on port ${process.env.PORT}`, "SYSTEM");
