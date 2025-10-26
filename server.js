@@ -177,6 +177,131 @@ async function handleDiagnose(from, text) {
 
 // ... keep handleLogs, handleClearLogs, confirmClearLogs, handleHealthCheck, sendHelpMenu, and generateReply functions exactly as in the last version ...
 
+async function handleLogs(from, text) {
+  const pass = text.split(" ")[1];
+  if (!ADMIN_NUMBERS.includes(from) || pass !== ADMIN_PASS) {
+    await sendMessage(from, "❌ Unauthorized or wrong password.");
+    log(`Unauthorized /logs attempt from ${from}`, "WARN");
+    return;
+  }
+
+  const logPath = path.join(process.cwd(), "logs", "bot.log");
+  if (!fs.existsSync(logPath)) {
+    await sendMessage(from, "No logs found yet.");
+    return;
+  }
+
+  try {
+    const formData = new FormData();
+    formData.append("file", fs.createReadStream(logPath));
+    const uploadResponse = await axios.post("https://file.io", formData, {
+      headers: formData.getHeaders(),
+    });
+    const fileUrl = uploadResponse.data.link;
+
+    await axios.post(
+      `https://graph.facebook.com/v21.0/${process.env.PHONE_NUMBER_ID}/messages`,
+      {
+        messaging_product: "whatsapp",
+        to: from,
+        type: "document",
+        document: { link: fileUrl, filename: "bot.log" },
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    log(`Sent log file link to ${from}`, "OUTGOING");
+  } catch (err) {
+    log(`Failed to send logs: ${err.message}`, "ERROR");
+    await sendMessage(from, "⚠️ Error sending log file.");
+  }
+}
+
+async function handleClearLogs(from, text) {
+  const pass = text.split(" ")[1];
+  if (!ADMIN_NUMBERS.includes(from) || pass !== ADMIN_PASS) {
+    await sendMessage(from, "❌ Unauthorized or wrong password.");
+    log(`Unauthorized /clearlogs attempt from ${from}`, "WARN");
+    return;
+  }
+
+  pendingClearConfirmations[from] = true;
+  await sendMessage(from, "⚠️ Are you sure you want to clear logs? Reply with 'YES' within 30 seconds to confirm.");
+  log(`Pending /clearlogs confirmation for ${from}`, "SYSTEM");
+
+  setTimeout(() => delete pendingClearConfirmations[from], 30000);
+}
+
+async function confirmClearLogs(from) {
+  const logPath = path.join(process.cwd(), "logs", "bot.log");
+  if (!fs.existsSync(logPath)) {
+    await sendMessage(from, "No log file found to clear.");
+    return;
+  }
+
+  try {
+    fs.truncateSync(logPath, 0);
+    log("Log file manually cleared by admin after confirmation.", "SYSTEM");
+    await sendMessage(from, "🧹 Log file cleared successfully.");
+  } catch (err) {
+    log(`Error clearing logs: ${err.message}`, "ERROR");
+    await sendMessage(from, "⚠️ Failed to clear logs.");
+  }
+}
+
+async function handleHealthCheck(from, text) {
+  const pass = text.split(" ")[1];
+  if (!ADMIN_NUMBERS.includes(from) || pass !== ADMIN_PASS) {
+    await sendMessage(from, "❌ Unauthorized or wrong password.");
+    log(`Unauthorized /healthcheck attempt from ${from}`, "WARN");
+    return;
+  }
+
+  try {
+    const mem = process.memoryUsage();
+    const uptimeHours = (process.uptime() / 3600).toFixed(2);
+    const heapUsed = (mem.heapUsed / 1024 / 1024).toFixed(2);
+    const rss = (mem.rss / 1024 / 1024).toFixed(2);
+
+    await runHealthCheck([from]);
+
+    const message = `🩺 *Bot Health Report*
+• Uptime: ${uptimeHours} hours
+• RSS: ${rss} MB
+• Heap Used: ${heapUsed} MB
+• Errors (last hour): 0
+
+✅ Health snapshot logged to *logs/health.json*`;
+
+    await sendMessage(from, message);
+    log(`Manual health check triggered by ${from}`, "SYSTEM");
+  } catch (err) {
+    log(`Health check error: ${err.message}`, "ERROR");
+    await sendMessage(from, "⚠️ Failed to complete health check.");
+  }
+}
+
+async function sendHelpMenu(from) {
+  const commands = [
+    { cmd: "/help", desc: "List all available admin commands." },
+    { cmd: "/diagnose <password>", desc: "Show uptime and memory diagnostics." },
+    { cmd: "/logs <password>", desc: "Get the latest bot log file." },
+    { cmd: "/clearlogs <password>", desc: "Clear the bot log file (requires YES confirmation)." },
+    { cmd: "/healthcheck <password>", desc: "Run an instant health check and update logs/health.json." },
+  ];
+
+  let message = "🛠 *Admin Commands*\n\n";
+  for (const c of commands) message += `• *${c.cmd}*\n  ${c.desc}\n\n`;
+  await sendMessage(from, message.trim());
+  log(`Sent help menu to ${from}`, "SYSTEM");
+}
+
+
 // ===== GPT REPLY GENERATION =====
 async function generateReply(userMessage) {
   try {
@@ -185,7 +310,8 @@ async function generateReply(userMessage) {
       messages: [
         {
           role: "system",
-          content: "You are a helpful WhatsApp assistant for a small business. Be polite, short, and clear.",
+          content:
+            "You are a helpful WhatsApp assistant for Alphadome. Be professional, warm, and concise. Encourage users to explore Alphadome’s digital ecosystem and community.",
         },
         { role: "user", content: userMessage },
       ],
@@ -194,10 +320,26 @@ async function generateReply(userMessage) {
     const reply = completion.choices[0].message.content;
     log(`Generated reply: ${reply}`, "AI");
     return reply;
+
   } catch (err) {
     incrementErrorCount();
     log(`GPT error: ${err.message}`, "ERROR");
-    return "Sorry, I’m having trouble understanding you right now.";
+
+    // === Custom fallback message (portfolio intro) ===
+    return `👋 Hey there! Welcome to *Alphadome* — your all-in-one creative AI ecosystem helping brands, creators, and innovators thrive in the digital world.
+
+Here’s a glimpse of what we build and do:
+
+• 🤖 Explore my AI Agent Portfolio → https://beacons.ai/saddymalingu  
+• 🎥 Creative Campaigns & Video Reels → https://www.instagram.com/afrika_bc/  
+• 🎬 Meet our AI Influencers & Bots →  
+   https://www.tiktok.com/@soma.katiba  
+   https://www.tiktok.com/@saddymalingu  
+• 📰 Read insights & stories — more coming soon!
+
+Alphadome helps brands scale through automation, AI storytelling, and digital creativity.
+
+💡 Want to be part of this system? Reply *Join Alphadome* to get started.`;
   }
 }
 
