@@ -391,6 +391,43 @@ app.get("/logs/live", async (req, res) => {
 });
 
 
+// ========== GET HISTORICAL LOGS ==========
+// Example usage: /logs/history?days=3&key=YOUR_ADMIN_PASS
+app.get("/logs/history", async (req, res) => {
+  try {
+    const { key, days = 3 } = req.query;
+
+    // 🔐 Security check
+    if (key !== process.env.ADMIN_PASS) {
+      return res.status(403).json({ error: "Unauthorized" });
+    }
+
+    // ⏱ Get logs from X days ago
+    const since = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
+
+    const { data, error } = await supabase
+      .from("logs")
+      .select("*")
+      .gte("created_at", since)
+      .order("created_at", { ascending: true });
+
+    if (error) {
+      console.error("[HISTORY LOG ERROR]", error.message);
+      return res.status(500).json({ error: error.message });
+    }
+
+    // 🗂 Return logs in JSON
+    res.status(200).json({
+      message: `Fetched ${data.length} logs from the last ${days} day(s)`,
+      logs: data,
+    });
+  } catch (err) {
+    console.error("[HISTORY ROUTE ERROR]", err.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+
 // ===== START SERVER =====
 app.listen(process.env.PORT, () => {
   log(`Server running on port ${process.env.PORT}`, "SYSTEM");
