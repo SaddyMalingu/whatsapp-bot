@@ -302,7 +302,7 @@ async function sendHelpMenu(from) {
 }
 
 
-// ===== GPT REPLY GENERATION =====
+// ===== GPT REPLY GENERATION ===== 
 async function generateReply(userMessage) {
   try {
     const completion = await openai.chat.completions.create({
@@ -325,6 +325,7 @@ async function generateReply(userMessage) {
     incrementErrorCount();
     log(`GPT error: ${err.message}`, "ERROR");
 
+    // === Updated fallback message with contact numbers ===
     return `👋 Hey there! Welcome to *Alphadome* — your all-in-one creative AI ecosystem helping brands, creators, and innovators thrive in the digital world.
 
 Here’s a glimpse of what we build and do:
@@ -338,10 +339,13 @@ Here’s a glimpse of what we build and do:
 
 Alphadome helps brands scale through automation, AI storytelling, and digital creativity.
 
-💡 Want to be part of this system? Reply *Join Alphadome* to get started.`;
+💡 Want to be part of this system? Reply *Join Alphadome* to get started.
+
+📞 Need help? Contact the creator directly:  
+• Call: +254743780542  
+• WhatsApp: +254117604817`;
   }
 }
-
 
 // ===== LIVE LOG STREAM =====
 app.get("/logs/live", async (req, res) => {
@@ -426,6 +430,79 @@ app.get("/logs/history", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+// === AUTO-RETRY FAILED WHATSAPP MESSAGES ===
+setInterval(async () => {
+  try {
+    const { data: failedMsgs, error } = await supabase
+      .from("whatsapp_logs")
+      .select("id, phone, error_message, retry_count")
+      .eq("status", "failed")
+      .lt("retry_count", 3) // only retry up to 3 times
+      .gte(
+        "created_at",
+        new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+      );
+
+    if (error) throw error;
+    if (!failedMsgs?.length) return;
+
+    log(`🔁 Retrying ${failedMsgs.length} failed WhatsApp messages`, "SYSTEM");
+
+    for (const msg of failedMsgs) {
+      try {
+        const fallback = `🙏 *Apologies for the delay!* We had a temporary issue earlier, but we're back online now.  
+
+👋 Hey there! Welcome to *Alphadome* — your all-in-one creative AI ecosystem helping brands, creators, and innovators thrive in the digital world. 
+
+Here’s a glimpse of what we build and do:
+
+• 🤖 Explore my AI Agent Portfolio → https://beacons.ai/saddymalingu  
+• 🎥 Creative Campaigns & Video Reels → https://www.instagram.com/afrika_bc/  
+• 🎬 Meet our AI Influencers & Bots →  
+   https://www.tiktok.com/@soma.katiba  
+   https://www.tiktok.com/@saddymalingu  
+• 📰 Read insights & stories — more coming soon!
+
+Alphadome helps brands scale through automation, AI storytelling, and digital creativity.
+
+💡 Want to be part of this system? Reply *Join Alphadome* to get started.
+
+📞 Need help? Contact the creator directly:  
+• Call : +254743780542  
+• WhatsApp: +254117604817`;
+
+        const sent = await sendMessage(msg.phone, fallback);
+        if (sent) {
+          await supabase
+            .from("whatsapp_logs")
+            .update({ status: "resent", retry_count: (msg.retry_count || 0) + 1 })
+            .eq("id", msg.id);
+
+          log(`✅ Successfully resent message to ${msg.phone}`, "SYSTEM");
+        } else {
+          throw new Error("Message send failed (no confirmation).");
+        }
+      } catch (retryErr) {
+        // increment retry count and mark as permanently failed after 3 attempts
+        const nextRetry = (msg.retry_count || 0) + 1;
+        const newStatus = nextRetry >= 3 ? "permanent_failure" : "failed";
+
+        await supabase
+          .from("whatsapp_logs")
+          .update({ retry_count: nextRetry, status: newStatus })
+          .eq("id", msg.id);
+
+        log(
+          `❌ Retry ${nextRetry} failed for ${msg.phone}: ${retryErr.message}`,
+          "ERROR"
+        );
+      }
+    }
+  } catch (err) {
+    log(`Retry job failed: ${err.message}`, "ERROR");
+  }
+}, 5 * 60 * 1000); // runs every 5 minutes
 
 
 // ===== START SERVER =====

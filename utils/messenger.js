@@ -1,11 +1,14 @@
 ﻿import axios from "axios";
 import { log } from "./logger.js";
-import { incrementErrorCount } from "./healthMonitor.js"; // ✅ add this line
+import { incrementErrorCount } from "./healthMonitor.js";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(process.env.SB_URL, process.env.SB_SERVICE_ROLE_KEY);
 
 // ===== SEND WHATSAPP MESSAGE =====
 export async function sendMessage(to, message) {
   try {
-    await axios.post(
+    const res = await axios.post(
       `https://graph.facebook.com/v21.0/${process.env.PHONE_NUMBER_ID}/messages`,
       {
         messaging_product: "whatsapp",
@@ -21,12 +24,37 @@ export async function sendMessage(to, message) {
       }
     );
 
-    log(`Message sent successfully to ${to}`, "OUTGOING");
+    log(`✅ Message sent successfully to ${to}`, "OUTGOING");
+
+    // Log success to Supabase
+    await supabase.from("whatsapp_logs").insert([
+      {
+        phone: to,
+        status: "sent",
+        response_code: res.status,
+        response_body: res.data,
+      },
+    ]);
+
+    return true;
   } catch (err) {
-    incrementErrorCount(); // ✅ increment error counter when message fails
+    incrementErrorCount();
+
     const details = err.response?.data
       ? JSON.stringify(err.response.data)
       : err.message;
-    log(`WhatsApp send error: ${details}`, "ERROR");
+
+    log(`❌ WhatsApp send error to ${to}: ${details}`, "ERROR");
+
+    // Log failure in Supabase for retry tracking
+    await supabase.from("whatsapp_logs").insert([
+      {
+        phone: to,
+        status: "failed",
+        error_message: details,
+      },
+    ]);
+
+    return false; // important for retry logic
   }
 }
