@@ -325,7 +325,6 @@ async function generateReply(userMessage) {
     incrementErrorCount();
     log(`GPT error: ${err.message}`, "ERROR");
 
-    // === Custom fallback message (portfolio intro) ===
     return `👋 Hey there! Welcome to *Alphadome* — your all-in-one creative AI ecosystem helping brands, creators, and innovators thrive in the digital world.
 
 Here’s a glimpse of what we build and do:
@@ -342,6 +341,54 @@ Alphadome helps brands scale through automation, AI storytelling, and digital cr
 💡 Want to be part of this system? Reply *Join Alphadome* to get started.`;
   }
 }
+
+
+// ===== LIVE LOG STREAM =====
+app.get("/logs/live", async (req, res) => {
+  const key = req.query.key;
+  if (key !== process.env.ADMIN_PASS) {
+    return res.status(403).send("Unauthorized");
+  }
+
+  res.writeHead(200, {
+    "Content-Type": "text/event-stream",
+    "Cache-Control": "no-cache",
+    Connection: "keep-alive",
+  });
+
+  const { data: recentLogs, error } = await supabase
+    .from("logs")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(20);
+
+  if (!error && recentLogs) {
+    recentLogs.reverse().forEach((logEntry) => {
+      res.write(`data: [${logEntry.created_at}] [${logEntry.level}] [${logEntry.source}] ${logEntry.message}\n\n`);
+    });
+  }
+
+  let lastCheck = new Date().toISOString();
+  const interval = setInterval(async () => {
+    const { data: newLogs } = await supabase
+      .from("logs")
+      .select("*")
+      .gt("created_at", lastCheck)
+      .order("created_at", { ascending: true });
+
+    if (newLogs && newLogs.length > 0) {
+      lastCheck = newLogs[newLogs.length - 1].created_at;
+      newLogs.forEach((logEntry) => {
+        res.write(`data: [${logEntry.created_at}] [${logEntry.level}] [${logEntry.source}] ${logEntry.message}\n\n`);
+      });
+    }
+  }, 3000);
+
+  req.on("close", () => {
+    clearInterval(interval);
+    res.end();
+  });
+});
 
 
 // ===== START SERVER =====
