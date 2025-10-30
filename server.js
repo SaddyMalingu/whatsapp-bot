@@ -14,6 +14,7 @@ import {
   runHealthCheck,
 } from "./utils/healthMonitor.js";
 import { sendMessage } from "./utils/messenger.js";
+import crypto from "crypto"; 
 
 dotenv.config();
 
@@ -119,6 +120,61 @@ app.post("/webhook", async (req, res) => {
       brandId = DEFAULT_BRAND_ID;
     }
 
+
+ // ---------- INSERT START: Join Alphadome / STK flow ----------
+    // detect join command (case-insensitive)
+    if (text.trim().toUpperCase() === "JOIN ALPHADOME" || text.trim().toUpperCase() === "JOIN") {
+      try {
+        // normalize phone to 2547XXXXXXXX (no + or leading 0)
+        let normalizedPhone = from.replace(/^\+/, "");
+        if (normalizedPhone.startsWith("0")) normalizedPhone = "254" + normalizedPhone.slice(1);
+
+        const amount = parseFloat(process.env.SUBSCRIPTION_AMOUNT || "900");
+        const accountRef = process.env.SUBSCRIPTION_ACCOUNT_REF || "Alphadome_Basic";
+
+        // create pending subscription
+        const { data: newSub, error: subErr } = await supabase
+          .from("subscriptions")
+          .insert([{
+            user_id: userData.id,
+            phone: normalizedPhone,
+            amount,
+            account_ref: accountRef,
+            status: "pending",
+          }])
+          .select("id")
+          .single();
+        if (subErr) throw subErr;
+
+        // call STK push
+        const stkResp = await initiateStkPush({
+          phone: normalizedPhone,
+          amount,
+          accountRef,
+          transactionDesc: "Alphadome Subscription"
+        });
+
+        const checkoutId = stkResp?.CheckoutRequestID || stkResp?.checkoutRequestID || null;
+        if (checkoutId) {
+          await supabase
+            .from("subscriptions")
+            .update({ mpesa_checkout_request_id: checkoutId, metadata: stkResp })
+            .eq("id", newSub.id);
+        }
+
+        await sendMessage(from, `✅ Payment prompt sent. Please complete the payment on your phone to finish subscription. If you have trouble, call +254117604817 or +254743780542.`);
+        log(`STK push initiated for ${from} (sub id ${newSub.id})`, "SYSTEM");
+      } catch (err) {
+        log(`Failed to initiate subscription for ${from}: ${err.message}`, "ERROR");
+        await sendMessage(from, "⚠️ We couldn't start the payment flow. Please try again later or contact +254117604817 or +254743780542 for help.");
+      }
+
+      // stop further processing for this incoming message
+      return res.sendStatus(200);
+    }
+    // ---------- INSERT END ----------
+
+  
     // STEP 3: Log inbound message
     const { error: convErr } = await supabase.from("conversations").insert([
       {
@@ -132,6 +188,8 @@ app.post("/webhook", async (req, res) => {
       },
     ]);
     if (convErr) throw convErr;
+
+   
 
     // STEP 4: Generate AI reply
     const reply = await generateReply(text);
@@ -154,6 +212,60 @@ app.post("/webhook", async (req, res) => {
 
   res.sendStatus(200);
 });
+
+  // ---------- INSERT START: M-Pesa callback endpoint ----------
+    
+app.post("/mpesa/callback", async (req, res) => {
+  try {
+    const body = req.body;
+
+    // respond immediately to provider
+    res.status(200).json({ ResultCode: 0, ResultDesc: "Accepted" });
+
+    const checkoutId = body.Body?.stkCallback?.CheckoutRequestID;
+    const resultCode = body.Body?.stkCallback?.ResultCode;
+    const callbackMetadata = body.Body?.stkCallback?.CallbackMetadata?.Item || [];
+
+    const { data: subs, error: subErr } = await supabase
+      .from("subscriptions")
+      .select("*")
+      .eq("mpesa_checkout_request_id", checkoutId)
+      .limit(1)
+      .single();
+
+    if (subErr || !subs) {
+      log(`MPESA callback: subscription not found for CheckoutRequestID ${checkoutId}`, "WARN");
+      return;
+    }
+
+    if (resultCode === 0) {
+      const receipt = callbackMetadata.find(i => i.Name === "MpesaReceiptNumber")?.Value || null;
+      const amount = callbackMetadata.find(i => i.Name === "Amount")?.Value || null;
+      const phone = callbackMetadata.find(i => i.Name === "PhoneNumber")?.Value || subs.phone;
+
+      await supabase.from("subscriptions").update({
+        status: "paid",
+        mpesa_receipt_no: receipt,
+        metadata: { callback: body }
+      }).eq("id", subs.id);
+
+      await sendMessage(phone, `🎉 Payment received! Thank you for joining Alphadome. Receipt: ${receipt}.`);
+      log(`Subscription ${subs.id} marked paid (receipt ${receipt})`, "SYSTEM");
+    } else {
+      await supabase.from("subscriptions").update({
+        status: "failed",
+        metadata: { callback: body }
+      }).eq("id", subs.id);
+
+      await sendMessage(subs.phone, `⚠️ We couldn't confirm your payment. Please try again or contact +254117604817 or +254743780542 for help.`);
+      log(`Subscription ${subs.id} payment failed (ResultCode ${resultCode})`, "WARN");
+    }
+  } catch (err) {
+    log(`MPESA callback processing error: ${err.message}`, "ERROR");
+  }
+});
+// ---------- INSERT END ----------
+
 
 // ===== ADMIN COMMANDS (unchanged) =====
 async function handleDiagnose(from, text) {
@@ -344,6 +456,70 @@ Alphadome helps brands scale through automation, AI storytelling, and digital cr
 📞 Need help? Contact the creator directly:  
 • Call: +254743780542  
 • WhatsApp: +254117604817`;
+  }
+}
+
+// helper: get oauth token from Safaricom Daraja
+async function getMpesaAuthToken() {
+  try {
+    const key = process.env.MPESA_CONSUMER_KEY;
+    const secret = process.env.MPESA_CONSUMER_SECRET;
+    const auth = Buffer.from(`${key}:${secret}`).toString("base64");
+
+    const base = process.env.MPESA_ENV === "production"
+      ? "https://api.safaricom.co.ke"
+      : "https://sandbox.safaricom.co.ke";
+
+    const resp = await axios.get(`${base}/oauth/v1/generate?grant_type=client_credentials`, {
+      headers: { Authorization: `Basic ${auth}` },
+    });
+    return resp.data.access_token;
+  } catch (err) {
+    log(`M-Pesa auth error: ${err.response?.data || err.message}`, "ERROR");
+    throw err;
+  }
+}
+
+// helper: initiate STK push
+// phone must be in format 2547XXXXXXXX (no leading 0)
+async function initiateStkPush({ phone, amount, accountRef, transactionDesc }) {
+  try {
+    const token = await getMpesaAuthToken();
+    const base = process.env.MPESA_ENV === "production"
+      ? "https://api.safaricom.co.ke"
+      : "https://sandbox.safaricom.co.ke";
+
+    const shortcode = process.env.MPESA_SHORTCODE;
+    const passkey = process.env.MPESA_PASSKEY;
+    const timestamp = new Date().toISOString().replace(/[^0-9]/g, "").slice(0, 14); // YYYYMMDDhhmmss
+    const password = Buffer.from(shortcode + passkey + timestamp).toString("base64");
+
+    const body = {
+      BusinessShortCode: shortcode,
+      Password: password,
+      Timestamp: timestamp,
+      TransactionType: "CustomerPayBillOnline",
+      Amount: amount,
+      PartyA: phone,               // MSISDN sending the money
+      PartyB: shortcode,           // paybill/shortcode receiving payment
+      PhoneNumber: phone,
+      CallBackURL: process.env.MPESA_CALLBACK_URL,
+      AccountReference: accountRef,
+      TransactionDesc: transactionDesc || "Alphadome subscription"
+    };
+
+    const resp = await axios.post(`${base}/mpesa/stkpush/v1/processrequest`, body, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    // resp.data should contain CheckoutRequestID & ResponseCode
+    return resp.data;
+  } catch (err) {
+    log(`STK Push error: ${err.response?.data || err.message}`, "ERROR");
+    throw err;
   }
 }
 
