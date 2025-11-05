@@ -44,6 +44,18 @@ runHealthCheck(ADMIN_NUMBERS);
 
 let pendingClearConfirmations = {};
 
+// ========== NEW HELPER: Level-based pricing ==========
+function getPaymentAmount(plan = "Monthly", level = 1) {
+  level = parseInt(level);
+  if (isNaN(level) || level < 1) level = 1;
+  plan = plan.toLowerCase();
+
+  if (plan.startsWith("one")) return 100 * Math.pow(2, level - 1);
+  if (plan.startsWith("month")) return 900 * Math.pow(2, level - 1);
+  return 900 * Math.pow(2, level - 1); // default to Monthly if unclear
+}
+
+
 // ===== VERIFY WEBHOOK =====
 app.get("/webhook", (req, res) => {
   const verify_token = process.env.VERIFY_TOKEN;
@@ -123,57 +135,125 @@ app.post("/webhook", async (req, res) => {
 
  // ---------- INSERT START: Join Alphadome / STK flow ----------
     // detect join command (case-insensitive)
-    if (text.trim().toUpperCase() === "JOIN ALPHADOME" || text.trim().toUpperCase() === "JOIN") {
-      try {
-        // normalize phone to 2547XXXXXXXX (no + or leading 0)
-        let normalizedPhone = from.replace(/^\+/, "");
-        if (normalizedPhone.startsWith("0")) normalizedPhone = "254" + normalizedPhone.slice(1);
+   // ---------- UPDATED START: Join Alphadome / STK + level logic ----------
+if (text.trim().toUpperCase().startsWith("JOIN ALPHADOME") || text.trim().toUpperCase() === "JOIN") {
+  try {
+    // normalize phone to 2547XXXXXXXX (no + or leading 0)
+    let normalizedPhone = from.replace(/^\+/, "");
+    if (normalizedPhone.startsWith("0")) normalizedPhone = "254" + normalizedPhone.slice(1);
 
-        const amount = parseFloat(process.env.SUBSCRIPTION_AMOUNT || "900");
-        const accountRef = process.env.SUBSCRIPTION_ACCOUNT_REF || "Alphadome_Basic";
+    // 🧠 Detect plan and level from user text
+    const input = text.trim().toLowerCase();
+    let plan = "monthly";
+    let level = 1;
 
-        // create pending subscription
-        const { data: newSub, error: subErr } = await supabase
-          .from("subscriptions")
-          .insert([{
+    // detect plan keyword
+    if (input.includes("one time")) plan = "one";
+    else if (input.includes("monthly")) plan = "monthly";
+
+    // detect numeric level if mentioned (e.g. "join alphadome level 3")
+    const levelMatch = input.match(/level\s*(\d+)/i);
+    if (levelMatch) level = parseInt(levelMatch[1]);
+
+    // 🧮 Calculate amount
+    const amount = getPaymentAmount(plan, level);
+    const accountRef = `Alphadome_${plan}_L${level}`;
+
+    // ✅ Confirm to user before initiating payment
+    await sendMessage(
+      from,
+      `📦 You selected *${plan.toUpperCase()} Plan - Level ${level}*.\n💰 Amount: KES ${amount}.\n\nSending payment prompt... Please confirm on your phone.`
+    );
+
+    // 🗄️ Create or update subscription record in Supabase
+    const { data: existingSub, error: existingErr } = await supabase
+      .from("subscriptions")
+      .select("id, status")
+      .eq("user_id", userData.id)
+      .maybeSingle();
+
+    if (existingErr) throw existingErr;
+
+    let subId = null;
+
+    if (existingSub) {
+      // update existing subscription if found
+      const { data: updated, error: updErr } = await supabase
+        .from("subscriptions")
+        .update({
+          phone: normalizedPhone,
+          amount,
+          plan_type: plan,
+          level,
+          account_ref: accountRef,
+          status: "pending",
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", existingSub.id)
+        .select("id")
+        .single();
+
+      if (updErr) throw updErr;
+      subId = updated.id;
+    } else {
+      // create new subscription
+      const { data: newSub, error: newSubErr } = await supabase
+        .from("subscriptions")
+        .insert([
+          {
             user_id: userData.id,
             phone: normalizedPhone,
             amount,
+            plan_type: plan,
+            level,
             account_ref: accountRef,
             status: "pending",
-          }])
-          .select("id")
-          .single();
-        if (subErr) throw subErr;
+          },
+        ])
+        .select("id")
+        .single();
 
-        // call STK push
-        const stkResp = await initiateStkPush({
-          phone: normalizedPhone,
-          amount,
-          accountRef,
-          transactionDesc: "Alphadome Subscription"
-        });
-
-        const checkoutId = stkResp?.CheckoutRequestID || stkResp?.checkoutRequestID || null;
-        if (checkoutId) {
-          await supabase
-            .from("subscriptions")
-            .update({ mpesa_checkout_request_id: checkoutId, metadata: stkResp })
-            .eq("id", newSub.id);
-        }
-
-        await sendMessage(from, `✅ Payment prompt sent. Please complete the payment on your phone to finish subscription. If you have trouble, call +254117604817 or +254743780542.`);
-        log(`STK push initiated for ${from} (sub id ${newSub.id})`, "SYSTEM");
-      } catch (err) {
-        log(`Failed to initiate subscription for ${from}: ${err.message}`, "ERROR");
-        await sendMessage(from, "⚠️ We couldn't start the payment flow. Please try again later or contact +254117604817 or +254743780542 for help.");
-      }
-
-      // stop further processing for this incoming message
-      return res.sendStatus(200);
+      if (newSubErr) throw newSubErr;
+      subId = newSub.id;
     }
-    // ---------- INSERT END ----------
 
+    // 🔁 Initiate M-Pesa STK Push
+    const stkResp = await initiateStkPush({
+      phone: normalizedPhone,
+      amount,
+      accountRef,
+      transactionDesc: `${plan.toUpperCase()} Plan Level ${level}`,
+    });
+
+    const checkoutId = stkResp?.CheckoutRequestID || stkResp?.checkoutRequestID || null;
+    if (checkoutId) {
+      await supabase
+        .from("subscriptions")
+        .update({
+          mpesa_checkout_request_id: checkoutId,
+          metadata: stkResp,
+        })
+        .eq("id", subId);
+    }
+
+    await sendMessage(
+      from,
+      `✅ Payment prompt sent.\nPlease complete the payment on your phone to activate your *${plan.toUpperCase()} Level ${level}* subscription.\n\nIf you encounter issues, call +254117604817 or +254743780542.`
+    );
+
+    log(`STK push initiated for ${from} (sub id ${subId}, ${plan} level ${level})`, "SYSTEM");
+  } catch (err) {
+    log(`Failed to initiate subscription for ${from}: ${err.message}`, "ERROR");
+    await sendMessage(
+      from,
+      "⚠️ We couldn't start the payment flow. Please try again later or contact +254117604817 or +254743780542 for help."
+    );
+  }
+
+  // stop further processing for this incoming message
+  return res.sendStatus(200);
+}
+// ---------- UPDATED END ----------
   
     // STEP 3: Log inbound message
     const { error: convErr } = await supabase.from("conversations").insert([
@@ -219,7 +299,7 @@ app.post("/mpesa/callback", async (req, res) => {
   try {
     const body = req.body;
 
-    // respond immediately to provider
+    // respond immediately to M-Pesa to avoid timeout
     res.status(200).json({ ResultCode: 0, ResultDesc: "Accepted" });
 
     const checkoutId = body.Body?.stkCallback?.CheckoutRequestID;
@@ -238,32 +318,55 @@ app.post("/mpesa/callback", async (req, res) => {
       return;
     }
 
+    // Payment successful
     if (resultCode === 0) {
       const receipt = callbackMetadata.find(i => i.Name === "MpesaReceiptNumber")?.Value || null;
       const amount = callbackMetadata.find(i => i.Name === "Amount")?.Value || null;
       const phone = callbackMetadata.find(i => i.Name === "PhoneNumber")?.Value || subs.phone;
 
+      // ✅ 1. Mark subscription as paid
       await supabase.from("subscriptions").update({
         status: "paid",
         mpesa_receipt_no: receipt,
-        metadata: { callback: body }
+        metadata: { callback: body },
+        updated_at: new Date().toISOString()
       }).eq("id", subs.id);
 
-      await sendMessage(phone, `🎉 Payment received! Thank you for joining Alphadome. Receipt: ${receipt}.`);
-      log(`Subscription ${subs.id} marked paid (receipt ${receipt})`, "SYSTEM");
+      // ✅ 2. Mark user as subscribed
+      await supabase.from("users").update({
+        subscribed: true,
+        subscription_type: subs.plan_type,
+        subscription_level: subs.level,
+        updated_at: new Date().toISOString()
+      }).eq("id", subs.user_id);
+
+      // ✅ 3. Confirmation message to the user
+      await sendMessage(
+        phone,
+        `🎉 *Payment Successful!*\n\nThank you for joining Alphadome.\nYour *${subs.plan_type.toUpperCase()} Plan - Level ${subs.level}* has been activated.\n\n🧾 Receipt: ${receipt}\n💰 Amount: KES ${amount}`
+      );
+
+      log(`✅ Subscription ${subs.id} marked paid (receipt ${receipt})`, "SYSTEM");
     } else {
+      // Payment failed or cancelled
       await supabase.from("subscriptions").update({
         status: "failed",
-        metadata: { callback: body }
+        metadata: { callback: body },
+        updated_at: new Date().toISOString()
       }).eq("id", subs.id);
 
-      await sendMessage(subs.phone, `⚠️ We couldn't confirm your payment. Please try again or contact +254117604817 or +254743780542 for help.`);
+      await sendMessage(
+        subs.phone,
+        `⚠️ Payment not completed for your *${subs.plan_type.toUpperCase()} Plan - Level ${subs.level}*.\nPlease try again or contact +254117604817 or +254743780542 for help.`
+      );
+
       log(`Subscription ${subs.id} payment failed (ResultCode ${resultCode})`, "WARN");
     }
   } catch (err) {
     log(`MPESA callback processing error: ${err.message}`, "ERROR");
   }
 });
+
 // ---------- INSERT END ----------
 
 
@@ -484,7 +587,28 @@ async function getMpesaAuthToken() {
 // phone must be in format 2547XXXXXXXX (no leading 0)
 async function initiateStkPush({ phone, amount, accountRef, transactionDesc }) {
   try {
-    const token = await getMpesaAuthToken();
+    // ✅ Step 1: Validate environment variables
+    if (
+      !process.env.MPESA_CONSUMER_KEY ||
+      !process.env.MPESA_CONSUMER_SECRET ||
+      !process.env.MPESA_PASSKEY ||
+      !process.env.MPESA_SHORTCODE ||
+      !process.env.MPESA_CALLBACK_URL
+    ) {
+      log("⚠️ Missing one or more M-Pesa credentials in environment variables", "ERROR");
+      throw new Error("Missing required M-Pesa credentials");
+    }
+
+    // ✅ Step 2: Authenticate with Daraja
+    let token;
+    try {
+      token = await getMpesaAuthToken();
+    } catch (authErr) {
+      log(`❌ Failed to get M-Pesa token: ${authErr.message}`, "ERROR");
+      throw new Error("Failed to authenticate with M-Pesa API");
+    }
+
+    // ✅ Step 3: Prepare STK push request
     const base = process.env.MPESA_ENV === "production"
       ? "https://api.safaricom.co.ke"
       : "https://sandbox.safaricom.co.ke";
@@ -501,13 +625,14 @@ async function initiateStkPush({ phone, amount, accountRef, transactionDesc }) {
       TransactionType: "CustomerPayBillOnline",
       Amount: amount,
       PartyA: phone,               // MSISDN sending the money
-      PartyB: shortcode,           // paybill/shortcode receiving payment
+      PartyB: shortcode,           // Paybill/shortcode receiving payment
       PhoneNumber: phone,
       CallBackURL: process.env.MPESA_CALLBACK_URL,
       AccountReference: accountRef,
-      TransactionDesc: transactionDesc || "Alphadome subscription"
+      TransactionDesc: transactionDesc || "Alphadome subscription",
     };
 
+    // ✅ Step 4: Send STK push
     const resp = await axios.post(`${base}/mpesa/stkpush/v1/processrequest`, body, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -515,13 +640,15 @@ async function initiateStkPush({ phone, amount, accountRef, transactionDesc }) {
       },
     });
 
-    // resp.data should contain CheckoutRequestID & ResponseCode
+    // ✅ Step 5: Return Safaricom response
     return resp.data;
+
   } catch (err) {
-    log(`STK Push error: ${err.response?.data || err.message}`, "ERROR");
+    log(`❌ STK Push error: ${err.response?.data ? JSON.stringify(err.response.data) : err.message}`, "ERROR");
     throw err;
   }
 }
+
 
 // ===== LIVE LOG STREAM =====
 app.get("/logs/live", async (req, res) => {
