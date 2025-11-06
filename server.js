@@ -227,6 +227,7 @@ if (
 }
 
 // 🧩 STEP 2: Handle user sending payment number ("same" or 2547XXXXXXXX)
+// 🧩 STEP 2: Handle user sending payment number ("same" or 2547XXXXXXXX)
 if (text.match(/^2547\d{7}$/) || text.toLowerCase() === "same") {
   try {
     // Normalize WhatsApp number
@@ -234,19 +235,20 @@ if (text.match(/^2547\d{7}$/) || text.toLowerCase() === "same") {
     if (whatsappPhone.startsWith("0"))
       whatsappPhone = "254" + whatsappPhone.slice(1);
 
-    const paymentPhone = text.toLowerCase() === "same" ? whatsappPhone : text.trim();
+    const paymentPhone =
+      text.toLowerCase() === "same" ? whatsappPhone : text.trim().replace(/^\+/, "");
 
-    // Fetch most recent "awaiting_number" subscription
-    const { data: pendingSubs, error: subErr } = await supabase
+    // 🧭 Find most recent subscription awaiting number
+    const { data: awaitingSub, error: awaitingErr } = await supabase
       .from("subscriptions")
       .select("*")
-      .eq("user_id", userData.id)
+      .or(`user_id.eq.${userData.id},phone.eq.${whatsappPhone}`)
       .eq("status", "awaiting_number")
       .order("created_at", { ascending: false })
-      .limit(1);
+      .limit(1)
+      .single();
 
-    if (subErr) throw subErr;
-    if (!pendingSubs || pendingSubs.length === 0) {
+    if (awaitingErr || !awaitingSub) {
       await sendMessage(
         from,
         "⚠️ No pending subscription found. Please type *Join Alphadome* again to restart."
@@ -254,10 +256,9 @@ if (text.match(/^2547\d{7}$/) || text.toLowerCase() === "same") {
       return res.sendStatus(200);
     }
 
-    const sub = pendingSubs[0];
-    const { amount, plan_type, level, account_ref } = sub;
+    const { amount, plan_type, level, account_ref, id: subId } = awaitingSub;
 
-    // Update subscription with payment number
+    // ✅ Update subscription
     await supabase
       .from("subscriptions")
       .update({
@@ -265,7 +266,7 @@ if (text.match(/^2547\d{7}$/) || text.toLowerCase() === "same") {
         status: "pending",
         updated_at: new Date().toISOString(),
       })
-      .eq("id", sub.id);
+      .eq("id", subId);
 
     await sendMessage(
       from,
@@ -280,7 +281,8 @@ if (text.match(/^2547\d{7}$/) || text.toLowerCase() === "same") {
       transactionDesc: `${plan_type.toUpperCase()} Plan Level ${level}`,
     });
 
-    const checkoutId = stkResp?.CheckoutRequestID || stkResp?.checkoutRequestID || null;
+    const checkoutId =
+      stkResp?.CheckoutRequestID || stkResp?.checkoutRequestID || null;
 
     if (checkoutId) {
       await supabase
@@ -289,7 +291,7 @@ if (text.match(/^2547\d{7}$/) || text.toLowerCase() === "same") {
           mpesa_checkout_request_id: checkoutId,
           metadata: stkResp,
         })
-        .eq("id", sub.id);
+        .eq("id", subId);
     }
 
     await sendMessage(
@@ -297,7 +299,10 @@ if (text.match(/^2547\d{7}$/) || text.toLowerCase() === "same") {
       `✅ Payment prompt sent!\nPlease complete the payment on your phone to activate your *${plan_type.toUpperCase()} Level ${level}* subscription.\n\nIf you encounter issues, call +254117604817 or +254743780542.`
     );
 
-    log(`STK push initiated for ${from} (${paymentPhone}, ${plan_type} L${level})`, "SYSTEM");
+    log(
+      `STK push initiated for ${from} (${paymentPhone}, ${plan_type} L${level})`,
+      "SYSTEM"
+    );
   } catch (err) {
     log(`Failed to handle payment number for ${from}: ${err.message}`, "ERROR");
     await sendMessage(
@@ -308,6 +313,7 @@ if (text.match(/^2547\d{7}$/) || text.toLowerCase() === "same") {
 
   return res.sendStatus(200);
 }
+
 
 // ---------- UPDATED END ----------
   
