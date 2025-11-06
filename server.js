@@ -136,96 +136,152 @@ app.post("/webhook", async (req, res) => {
  // ---------- INSERT START: Join Alphadome / STK flow ----------
     // detect join command (case-insensitive)
    // ---------- UPDATED START: Join Alphadome / STK + level logic ----------
-if (text.trim().toUpperCase().startsWith("JOIN ALPHADOME") || text.trim().toUpperCase() === "JOIN") {
+// ================= Alphadome Subscription & Payment Flow ================= //
+
+/**
+ * Calculate the amount based on plan type and level.
+ * Level doubles the previous amount each time.
+ */
+function getPaymentAmount(plan, level) {
+  const baseOneTime = 100;
+  const baseMonthly = 900;
+  const base = plan === "one" ? baseOneTime : baseMonthly;
+  return base * Math.pow(2, level - 1);
+}
+
+// 🧩 STEP 1: Handle "JOIN ALPHADOME" message
+if (
+  text.trim().toUpperCase().startsWith("JOIN ALPHADOME") ||
+  text.trim().toUpperCase() === "JOIN"
+) {
   try {
-    // normalize phone to 2547XXXXXXXX (no + or leading 0)
+    // Normalize WhatsApp phone number
     let normalizedPhone = from.replace(/^\+/, "");
-    if (normalizedPhone.startsWith("0")) normalizedPhone = "254" + normalizedPhone.slice(1);
+    if (normalizedPhone.startsWith("0"))
+      normalizedPhone = "254" + normalizedPhone.slice(1);
 
-    // 🧠 Detect plan and level from user text
     const input = text.trim().toLowerCase();
-    let plan = "monthly";
+    let plan = input.includes("one time") ? "one" : "monthly";
     let level = 1;
-
-    // detect plan keyword
-    if (input.includes("one time")) plan = "one";
-    else if (input.includes("monthly")) plan = "monthly";
-
-    // detect numeric level if mentioned (e.g. "join alphadome level 3")
     const levelMatch = input.match(/level\s*(\d+)/i);
     if (levelMatch) level = parseInt(levelMatch[1]);
+    if (isNaN(level) || level < 1) level = 1;
 
-    // 🧮 Calculate amount
     const amount = getPaymentAmount(plan, level);
     const accountRef = `Alphadome_${plan}_L${level}`;
 
-    // ✅ Confirm to user before initiating payment
-    await sendMessage(
-      from,
-      `📦 You selected *${plan.toUpperCase()} Plan - Level ${level}*.\n💰 Amount: KES ${amount}.\n\nSending payment prompt... Please confirm on your phone.`
-    );
-
-    // 🗄️ Create or update subscription record in Supabase
-    const { data: existingSub, error: existingErr } = await supabase
+    // 🧠 Create or update subscription as awaiting number
+    const { data: existing, error: fetchErr } = await supabase
       .from("subscriptions")
       .select("id, status")
       .eq("user_id", userData.id)
-      .maybeSingle();
+      .order("created_at", { ascending: false })
+      .limit(1);
 
-    if (existingErr) throw existingErr;
+    if (fetchErr) throw fetchErr;
 
-    let subId = null;
-
-    if (existingSub) {
-      // update existing subscription if found
-      const { data: updated, error: updErr } = await supabase
+    if (existing && existing.length > 0) {
+      await supabase
         .from("subscriptions")
         .update({
           phone: normalizedPhone,
           amount,
           plan_type: plan,
+          subscription_period: plan === "one" ? "one time" : "monthly",
           level,
           account_ref: accountRef,
-          status: "pending",
+          status: "awaiting_number",
           updated_at: new Date().toISOString(),
         })
-        .eq("id", existingSub.id)
-        .select("id")
-        .single();
-
-      if (updErr) throw updErr;
-      subId = updated.id;
+        .eq("id", existing[0].id);
     } else {
-      // create new subscription
-      const { data: newSub, error: newSubErr } = await supabase
-        .from("subscriptions")
-        .insert([
-          {
-            user_id: userData.id,
-            phone: normalizedPhone,
-            amount,
-            plan_type: plan,
-            level,
-            account_ref: accountRef,
-            status: "pending",
-          },
-        ])
-        .select("id")
-        .single();
-
-      if (newSubErr) throw newSubErr;
-      subId = newSub.id;
+      await supabase.from("subscriptions").insert([
+        {
+          user_id: userData.id,
+          phone: normalizedPhone,
+          amount,
+          plan_type: plan,
+          subscription_period: plan === "one" ? "one time" : "monthly",
+          level,
+          account_ref: accountRef,
+          status: "awaiting_number",
+        },
+      ]);
     }
 
-    // 🔁 Initiate M-Pesa STK Push
+    await sendMessage(
+      from,
+      `📦 You selected *${plan.toUpperCase()} Plan - Level ${level}*.\n💰 Amount: KES ${amount}.\n\nPlease reply with the *M-Pesa number (2547XXXXXXXX)* you'd like to use for payment.\nIf you want to use your WhatsApp number, type *same*.`
+    );
+
+    log(`User ${from} prompted for payment number (${plan} L${level})`, "SYSTEM");
+  } catch (err) {
+    log(`Failed to start Alphadome join flow for ${from}: ${err.message}`, "ERROR");
+    await sendMessage(
+      from,
+      "⚠️ Something went wrong setting up your subscription. Please try again or contact +254117604817 / +254743780542."
+    );
+  }
+
+  return res.sendStatus(200);
+}
+
+// 🧩 STEP 2: Handle user sending payment number ("same" or 2547XXXXXXXX)
+if (text.match(/^2547\d{7}$/) || text.toLowerCase() === "same") {
+  try {
+    // Normalize WhatsApp number
+    let whatsappPhone = from.replace(/^\+/, "");
+    if (whatsappPhone.startsWith("0"))
+      whatsappPhone = "254" + whatsappPhone.slice(1);
+
+    const paymentPhone = text.toLowerCase() === "same" ? whatsappPhone : text.trim();
+
+    // Fetch most recent "awaiting_number" subscription
+    const { data: pendingSubs, error: subErr } = await supabase
+      .from("subscriptions")
+      .select("*")
+      .eq("user_id", userData.id)
+      .eq("status", "awaiting_number")
+      .order("created_at", { ascending: false })
+      .limit(1);
+
+    if (subErr) throw subErr;
+    if (!pendingSubs || pendingSubs.length === 0) {
+      await sendMessage(
+        from,
+        "⚠️ No pending subscription found. Please type *Join Alphadome* again to restart."
+      );
+      return res.sendStatus(200);
+    }
+
+    const sub = pendingSubs[0];
+    const { amount, plan_type, level, account_ref } = sub;
+
+    // Update subscription with payment number
+    await supabase
+      .from("subscriptions")
+      .update({
+        payment_phone: paymentPhone,
+        status: "pending",
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", sub.id);
+
+    await sendMessage(
+      from,
+      `💳 Initiating payment of KES ${amount} for your *${plan_type.toUpperCase()} Level ${level}* plan.\n\nPlease check your phone (${paymentPhone}) and enter your M-Pesa PIN to complete the transaction.`
+    );
+
+    // 🔁 Trigger M-Pesa STK Push
     const stkResp = await initiateStkPush({
-      phone: normalizedPhone,
+      phone: paymentPhone,
       amount,
-      accountRef,
-      transactionDesc: `${plan.toUpperCase()} Plan Level ${level}`,
+      accountRef: account_ref,
+      transactionDesc: `${plan_type.toUpperCase()} Plan Level ${level}`,
     });
 
     const checkoutId = stkResp?.CheckoutRequestID || stkResp?.checkoutRequestID || null;
+
     if (checkoutId) {
       await supabase
         .from("subscriptions")
@@ -233,26 +289,26 @@ if (text.trim().toUpperCase().startsWith("JOIN ALPHADOME") || text.trim().toUppe
           mpesa_checkout_request_id: checkoutId,
           metadata: stkResp,
         })
-        .eq("id", subId);
+        .eq("id", sub.id);
     }
 
     await sendMessage(
       from,
-      `✅ Payment prompt sent.\nPlease complete the payment on your phone to activate your *${plan.toUpperCase()} Level ${level}* subscription.\n\nIf you encounter issues, call +254117604817 or +254743780542.`
+      `✅ Payment prompt sent!\nPlease complete the payment on your phone to activate your *${plan_type.toUpperCase()} Level ${level}* subscription.\n\nIf you encounter issues, call +254117604817 or +254743780542.`
     );
 
-    log(`STK push initiated for ${from} (sub id ${subId}, ${plan} level ${level})`, "SYSTEM");
+    log(`STK push initiated for ${from} (${paymentPhone}, ${plan_type} L${level})`, "SYSTEM");
   } catch (err) {
-    log(`Failed to initiate subscription for ${from}: ${err.message}`, "ERROR");
+    log(`Failed to handle payment number for ${from}: ${err.message}`, "ERROR");
     await sendMessage(
       from,
-      "⚠️ We couldn't start the payment flow. Please try again later or contact +254117604817 or +254743780542 for help."
+      "⚠️ We couldn't start the payment flow. Please try again or contact +254117604817 / +254743780542 for help."
     );
   }
 
-  // stop further processing for this incoming message
   return res.sendStatus(200);
 }
+
 // ---------- UPDATED END ----------
   
     // STEP 3: Log inbound message
@@ -326,7 +382,7 @@ app.post("/mpesa/callback", async (req, res) => {
 
       // ✅ 1. Mark subscription as paid
       await supabase.from("subscriptions").update({
-        status: "paid",
+        status: "subscribed",
         mpesa_receipt_no: receipt,
         metadata: { callback: body },
         updated_at: new Date().toISOString()
