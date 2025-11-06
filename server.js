@@ -44,6 +44,8 @@ runHealthCheck(ADMIN_NUMBERS);
 
 let pendingClearConfirmations = {};
 
+
+
 // ========== NEW HELPER: Level-based pricing ==========
 function getPaymentAmount(plan = "Monthly", level = 1) {
   level = parseInt(level);
@@ -138,93 +140,127 @@ app.post("/webhook", async (req, res) => {
    // ---------- UPDATED START: Join Alphadome / STK + level logic ----------
 // ================= Alphadome Subscription & Payment Flow ================= //
 
-/**
- * Calculate the amount based on plan type and level.
- * Level doubles the previous amount each time.
- */
-function getPaymentAmount(plan, level) {
-  const baseOneTime = 100;
-  const baseMonthly = 900;
-  const base = plan === "one" ? baseOneTime : baseMonthly;
-  return base * Math.pow(2, level - 1);
-}
+
 
 // 🧩 STEP 1: Handle "JOIN ALPHADOME" message
-if (
-  text.trim().toUpperCase().startsWith("JOIN ALPHADOME") ||
-  text.trim().toUpperCase() === "JOIN"
-) {
+// ✅ JOIN ALPHADOME FLOW
+if (text.trim().toUpperCase().startsWith("JOIN ALPHADOME") || text.trim().toUpperCase() === "JOIN") {
   try {
-    // Normalize WhatsApp phone number
+    // normalize phone
     let normalizedPhone = from.replace(/^\+/, "");
-    if (normalizedPhone.startsWith("0"))
-      normalizedPhone = "254" + normalizedPhone.slice(1);
+    if (normalizedPhone.startsWith("0")) normalizedPhone = "254" + normalizedPhone.slice(1);
 
+    // detect plan & level
     const input = text.trim().toLowerCase();
-    let plan = input.includes("one time") ? "one" : "monthly";
+    let plan = "monthly";
     let level = 1;
+
+    if (input.includes("one time") || input.includes("onetime")) plan = "one";
+    else if (input.includes("monthly")) plan = "monthly";
+
     const levelMatch = input.match(/level\s*(\d+)/i);
     if (levelMatch) level = parseInt(levelMatch[1]);
-    if (isNaN(level) || level < 1) level = 1;
 
+    // compute amount
     const amount = getPaymentAmount(plan, level);
-    const accountRef = `Alphadome_${plan}_L${level}`;
 
-    // 🧠 Create or update subscription as awaiting number
-    const { data: existing, error: fetchErr } = await supabase
-      .from("subscriptions")
-      .select("id, status")
-      .eq("user_id", userData.id)
-      .order("created_at", { ascending: false })
-      .limit(1);
+    // store session waiting for phone
+    await supabase
+      .from("user_sessions")
+      .upsert({
+        phone: from,
+        context: { step: "awaiting_payment_number", plan, level, amount },
+        updated_at: new Date().toISOString(),
+      });
 
-    if (fetchErr) throw fetchErr;
-
-    if (existing && existing.length > 0) {
-      await supabase
-        .from("subscriptions")
-        .update({
-          phone: normalizedPhone,
-          amount,
-          plan_type: plan,
-          subscription_period: plan === "one" ? "one time" : "monthly",
-          level,
-          account_ref: accountRef,
-          status: "awaiting_number",
-          updated_at: new Date().toISOString(),
-        })
-        .eq("id", existing[0].id);
-    } else {
-      await supabase.from("subscriptions").insert([
-        {
-          user_id: userData.id,
-          phone: normalizedPhone,
-          amount,
-          plan_type: plan,
-          subscription_period: plan === "one" ? "one time" : "monthly",
-          level,
-          account_ref: accountRef,
-          status: "awaiting_number",
-        },
-      ]);
-    }
-
+    // prompt user for number
     await sendMessage(
       from,
       `📦 You selected *${plan.toUpperCase()} Plan - Level ${level}*.\n💰 Amount: KES ${amount}.\n\nPlease reply with the *M-Pesa number (2547XXXXXXXX)* you'd like to use for payment.\nIf you want to use your WhatsApp number, type *same*.`
     );
 
-    log(`User ${from} prompted for payment number (${plan} L${level})`, "SYSTEM");
+    return res.sendStatus(200);
   } catch (err) {
-    log(`Failed to start Alphadome join flow for ${from}: ${err.message}`, "ERROR");
-    await sendMessage(
-      from,
-      "⚠️ Something went wrong setting up your subscription. Please try again or contact +254117604817 / +254743780542."
-    );
+    log(`Failed to start Join Alphadome flow for ${from}: ${err.message}`, "ERROR");
+    await sendMessage(from, "⚠️ Something went wrong. Please try again later.");
+    return res.sendStatus(200);
   }
-
-  return res.sendStatus(200);
 }
+
+// ✅ PAYMENT NUMBER RESPONSE HANDLER
+const phoneMatch = text.trim().match(/^(\+?254|0)\d{9}$/) || text.trim().toLowerCase() === "same";
+
+if (phoneMatch) {
+  const { data: session } = await supabase
+    .from("user_sessions")
+    .select("context")
+    .eq("phone", from)
+    .maybeSingle();
+
+  if (session?.context?.step === "awaiting_payment_number") {
+    let paymentPhone = text.trim().toLowerCase() === "same" ? from : text.trim();
+
+    // normalize
+    if (paymentPhone.startsWith("0")) paymentPhone = "254" + paymentPhone.slice(1);
+    if (paymentPhone.startsWith("+")) paymentPhone = paymentPhone.replace(/^\+/, "");
+
+    const { plan, level, amount } = session.context;
+    const accountRef = `Alphadome_${plan}_L${level}`;
+
+    try {
+      await sendMessage(
+        from,
+        `💳 Processing your payment for *${plan.toUpperCase()} Level ${level}* (KES ${amount}). Please wait...`
+      );
+
+      // initiate STK push
+      const stkResp = await initiateStkPush({
+        phone: paymentPhone,
+        amount,
+        accountRef,
+        transactionDesc: `${plan.toUpperCase()} Plan Level ${level}`,
+      });
+
+      if (stkResp?.CheckoutRequestID) {
+        await supabase.from("subscriptions").insert([
+          {
+            user_id: userData.id,
+            phone: paymentPhone,
+            amount,
+            plan_type: plan,
+            level,
+            account_ref: accountRef,
+            status: "pending",
+            mpesa_checkout_request_id: stkResp.CheckoutRequestID,
+            metadata: stkResp,
+          },
+        ]);
+
+        await sendMessage(
+          from,
+          `✅ Payment prompt sent to ${paymentPhone}.\nPlease confirm on your phone to activate your *${plan.toUpperCase()} Level ${level}* subscription.`
+        );
+      } else {
+        await sendMessage(from, "⚠️ We couldn’t start the payment flow. Please try again later.");
+      }
+
+      // clear session
+      await supabase.from("user_sessions").delete().eq("phone", from);
+    } catch (err) {
+      log(`Payment flow error for ${from}: ${err.message}`, "ERROR");
+      await sendMessage(
+        from,
+        "⚠️ Something went wrong while processing your payment. Please try again later."
+      );
+    }
+
+    return res.sendStatus(200);
+  } else {
+    await sendMessage(from, "⚠️ No pending subscription found. Please type *Join Alphadome* again.");
+    return res.sendStatus(200);
+  }
+}
+
 
 // 🧩 STEP 2: Handle user sending payment number ("same" or 2547XXXXXXXX)
 // 🧩 STEP 2: Handle user sending payment number ("same" or 2547XXXXXXXX)
