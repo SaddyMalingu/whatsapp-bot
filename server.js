@@ -618,7 +618,6 @@ async function sendHelpMenu(from) {
 // ===== GPT REPLY GENERATION ===== 
 // ===== GPT REPLY GENERATION WITH OPENROUTER FALLBACK =====
 // ===== OpenRouter GPT REPLY =====
-import axios from "axios";
 
 async function generateReply(userMessage) {
   try {
