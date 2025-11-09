@@ -617,14 +617,42 @@ async function sendHelpMenu(from) {
 
 // ===== GPT REPLY GENERATION ===== 
 // ===== GPT REPLY GENERATION WITH OPENROUTER FALLBACK =====
-// ===== GPT REPLY GENERATION WITH OPENAI + OPENROUTER FALLBACK =====
-
+// ===== GPT REPLY GENERATION (OpenAI + OpenRouter fallback) =====
 async function generateReply(userMessage) {
-  // === 1️⃣ Try OpenAI first ===
-  if (process.env.OPENAI_API_KEY) {
-    try {
-      const completion = await openai.chat.completions.create({
-        model: "gpt-4o-mini",
+  // --- Step 1: Try OpenAI first ---
+  try {
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are a helpful WhatsApp assistant for Alphadome. Be professional, warm, and concise. Encourage users to explore Alphadome’s digital ecosystem and community.",
+        },
+        { role: "user", content: userMessage },
+      ],
+    });
+
+    const reply = completion.choices[0].message.content;
+    log(`Generated reply via OpenAI: ${reply}`, "AI");
+    return reply;
+
+  } catch (openaiErr) {
+    incrementErrorCount();
+    log(`OpenAI error: ${openaiErr.message}`, "ERROR");
+    log("Falling back to OpenRouter...", "SYSTEM");
+  }
+
+  // --- Step 2: Fallback to OpenRouter ---
+  try {
+    if (!process.env.OPENROUTER_API_KEY || !process.env.OPENROUTER_MODEL) {
+      throw new Error("Missing OpenRouter API key or model environment variables");
+    }
+
+    const response = await axios.post(
+      "https://openrouter.ai/v1/chat/completions",
+      {
+        model: process.env.OPENROUTER_MODEL,
         messages: [
           {
             role: "system",
@@ -633,61 +661,30 @@ async function generateReply(userMessage) {
           },
           { role: "user", content: userMessage },
         ],
-      });
-
-      const reply = completion.choices?.[0]?.message?.content;
-      if (reply) {
-        log(`Generated reply via OpenAI: ${reply}`, "AI");
-        return reply;
-      } else {
-        throw new Error(`OpenAI response missing content: ${JSON.stringify(completion)}`);
-      }
-    } catch (err) {
-      incrementErrorCount();
-      log(`OpenAI error: ${err.message}`, "ERROR");
-      // continue to OpenRouter
-    }
-  }
-
-  // === 2️⃣ Try OpenRouter safely ===
-  if (process.env.OPENROUTER_API_KEY && process.env.OPENROUTER_MODEL) {
-    try {
-      const response = await axios.post(
-        "https://openrouter.ai/v1/chat/completions",
-        {
-          model: process.env.OPENROUTER_MODEL,
-          messages: [
-            {
-              role: "system",
-              content:
-                "You are a helpful WhatsApp assistant for Alphadome. Be professional, warm, and concise. Encourage users to explore Alphadome’s digital ecosystem and community.",
-            },
-            { role: "user", content: userMessage },
-          ],
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+          "Content-Type": "application/json",
         },
-        {
-          headers: {
-            Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
+        timeout: 15000, // 15 seconds
+      }
+    );
 
-      // safely extract the reply
-      const reply = response.data?.choices?.[0]?.message?.content;
-      if (!reply) throw new Error(`OpenRouter response missing choices: ${JSON.stringify(response.data)}`);
+    log("OpenRouter raw response: " + JSON.stringify(response.data), "DEBUG");
 
-      log(`Generated reply via OpenRouter: ${reply}`, "AI");
-      return reply;
+    const reply = response.data?.choices?.[0]?.message?.content;
+    if (!reply) throw new Error("No 'choices' returned by OpenRouter");
 
-    } catch (err) {
-      incrementErrorCount();
-      log(`OpenRouter error: ${err.message}`, "ERROR");
-      // continue to fallback
-    }
+    log(`Generated reply via OpenRouter: ${reply}`, "AI");
+    return reply;
+
+  } catch (orErr) {
+    incrementErrorCount();
+    log(`OpenRouter error: ${orErr.message}`, "ERROR");
   }
 
-  // === 3️⃣ Fallback static message ===
+  // --- Step 3: Ultimate fallback (your existing static message) ---
   return `👋 Hey there! Welcome to *Alphadome* — your all-in-one creative AI ecosystem helping brands, creators, and innovators thrive in the digital world.
 
 Here’s a glimpse of what we build and do:
