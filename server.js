@@ -616,30 +616,70 @@ async function sendHelpMenu(from) {
 
 
 // ===== GPT REPLY GENERATION ===== 
+// ===== GPT REPLY GENERATION WITH OPENROUTER FALLBACK =====
+
 async function generateReply(userMessage) {
-  try {
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
+  // === 1️⃣ Try OpenAI if key exists ===
+  if (process.env.OPENAI_API_KEY) {
+    try {
+      const completion = await openai.chat.completions.create({
+        model: "gpt-4o-mini",
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are a helpful WhatsApp assistant for Alphadome. Be professional, warm, and concise. Encourage users to explore Alphadome’s digital ecosystem and community.",
+          },
+          { role: "user", content: userMessage },
+        ],
+      });
+
+      const reply = completion.choices[0].message.content;
+      log(`Generated reply via OpenAI: ${reply}`, "AI");
+      return reply;
+    } catch (err) {
+      incrementErrorCount();
+      log(`OpenAI error: ${err.message}`, "ERROR");
+      // continue to OpenRouter
+    }
+  }
+
+  // === 2️⃣ Try OpenRouter ===
+  if (process.env.OPENROUTER_API_KEY && process.env.OPENROUTER_MODEL) {
+    try {
+      const response = await axios.post(
+        "https://openrouter.ai/v1/chat/completions",
         {
-          role: "system",
-          content:
-            "You are a helpful WhatsApp assistant for Alphadome. Be professional, warm, and concise. Encourage users to explore Alphadome’s digital ecosystem and community.",
+          model: process.env.OPENROUTER_MODEL,
+          messages: [
+            {
+              role: "system",
+              content:
+                "You are a helpful WhatsApp assistant for Alphadome. Be professional, warm, and concise. Encourage users to explore Alphadome’s digital ecosystem and community.",
+            },
+            { role: "user", content: userMessage },
+          ],
         },
-        { role: "user", content: userMessage },
-      ],
-    });
+        {
+          headers: {
+            "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-    const reply = completion.choices[0].message.content;
-    log(`Generated reply: ${reply}`, "AI");
-    return reply;
+      const reply = response.data.choices[0].message.content;
+      log(`Generated reply via OpenRouter: ${reply}`, "AI");
+      return reply;
+    } catch (err) {
+      incrementErrorCount();
+      log(`OpenRouter error: ${err.message}`, "ERROR");
+      // continue to fallback
+    }
+  }
 
-  } catch (err) {
-    incrementErrorCount();
-    log(`GPT error: ${err.message}`, "ERROR");
-
-    // === Updated fallback message with contact numbers ===
-    return `👋 Hey there! Welcome to *Alphadome* — your all-in-one creative AI ecosystem helping brands, creators, and innovators thrive in the digital world.
+  // === 3️⃣ Fallback static message if both fail ===
+  return `👋 Hey there! Welcome to *Alphadome* — your all-in-one creative AI ecosystem helping brands, creators, and innovators thrive in the digital world.
 
 Here’s a glimpse of what we build and do:
 
@@ -657,8 +697,8 @@ Alphadome helps brands scale through automation, AI storytelling, and digital cr
 📞 Need help? Contact the creator directly:  
 • Call: +254743780542  
 • WhatsApp: +254117604817`;
-  }
 }
+
 
 // helper: get oauth token from Safaricom Daraja
 async function getMpesaAuthToken() {
