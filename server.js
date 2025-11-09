@@ -617,15 +617,20 @@ async function sendHelpMenu(from) {
 
 // ===== GPT REPLY GENERATION ===== 
 // ===== GPT REPLY GENERATION WITH OPENROUTER FALLBACK =====
-// ===== GPT REPLY GENERATION (OpenAI + OpenRouter fallback) =====
 // ===== OpenRouter GPT REPLY =====
+import axios from "axios";
+
 async function generateReply(userMessage) {
   try {
     // Primary OpenAI GPT call
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini", // primary model
       messages: [
-        { role: "system", content: "You are a helpful WhatsApp assistant for Alphadome. Be professional, warm, and concise. Encourage users to explore Alphadome’s digital ecosystem and community." },
+        {
+          role: "system",
+          content:
+            "You are a helpful WhatsApp assistant for Alphadome. Be professional, warm, and concise. Encourage users to explore Alphadome’s digital ecosystem and community.",
+        },
         { role: "user", content: userMessage },
       ],
     });
@@ -638,35 +643,46 @@ async function generateReply(userMessage) {
     incrementErrorCount();
     log(`OpenAI error: ${err.message}`, "ERROR");
 
-    // === Fallback to OpenRouter DeepSeek Free ===
+    // === Fallback to OpenRouter Meta Llama 3.3 free ===
     try {
-      const response = await openai.chat.completions.create({
-        model: process.env.OPENROUTER_MODEL, // DeepSeek Free
-        messages: [
-          { role: "system", content: "You are a helpful WhatsApp assistant for Alphadome. Be professional, warm, and concise. Encourage users to explore Alphadome’s digital ecosystem and community." },
-          { role: "user", content: userMessage },
-        ],
-      });
+      const routerResponse = await axios.post(
+        "https://api.openrouter.ai/v1/chat/completions",
+        {
+          model: "meta-llama/llama-3.3-70b-instruct:free",
+          messages: [
+            {
+              role: "system",
+              content:
+                "You are a helpful WhatsApp assistant for Alphadome. Be professional, warm, and concise. Encourage users to explore Alphadome’s digital ecosystem and community.",
+            },
+            { role: "user", content: userMessage },
+          ],
+        },
+        {
+          headers: {
+            "Authorization": `Bearer ${process.env.OPENROUTER_KEY}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-      if (response.choices && response.choices.length > 0) {
-        const fallbackReply = response.choices[0].message.content;
+      if (routerResponse.data.choices && routerResponse.data.choices.length > 0) {
+        const fallbackReply = routerResponse.data.choices[0].message.content;
         log(`OpenRouter reply: ${fallbackReply}`, "AI");
         return fallbackReply;
       } else {
-        log(`OpenRouter error: No choices returned`, "ERROR");
-        // return your fallback message
+        log("OpenRouter error: No choices returned", "ERROR");
         return fallbackMessage();
       }
 
     } catch (routerErr) {
       log(`OpenRouter error: ${routerErr.message}`, "ERROR");
-      // return your fallback message
       return fallbackMessage();
     }
   }
 }
 
-// fallback message function
+// Fallback message function
 function fallbackMessage() {
   return `👋 Hey there! Welcome to *Alphadome* — your all-in-one creative AI ecosystem helping brands, creators, and innovators thrive in the digital world.
 
