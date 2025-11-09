@@ -617,71 +617,94 @@ async function sendHelpMenu(from) {
 
 // ===== GPT REPLY GENERATION ===== 
 // ===== GPT REPLY GENERATION WITH OPENROUTER FALLBACK =====
-// ===== OpenRouter GPT REPLY =====
 
+// ===== GPT REPLY WITH MULTI-FALLBACK (Axios Version) =====
 async function generateReply(userMessage) {
+  // System message shared across all providers
+  const systemMessage = {
+    role: "system",
+    content:
+      "You are a helpful WhatsApp assistant for Alphadome. Be professional, warm, and concise. Encourage users to explore Alphadome’s digital ecosystem and community."
+  };
+
+  // 1️⃣ Try OpenAI first
   try {
-    // Primary OpenAI GPT call
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini", // primary model
-      messages: [
-        {
-          role: "system",
-          content:
-            "You are a helpful WhatsApp assistant for Alphadome. Be professional, warm, and concise. Encourage users to explore Alphadome’s digital ecosystem and community.",
-        },
-        { role: "user", content: userMessage },
-      ],
+      messages: [systemMessage, { role: "user", content: userMessage }],
     });
 
     const reply = completion.choices[0].message.content;
-    log(`Generated reply: ${reply}`, "AI");
+    log(`OpenAI reply: ${reply}`, "AI");
     return reply;
 
-  } catch (err) {
+  } catch (openAIErr) {
     incrementErrorCount();
-    log(`OpenAI error: ${err.message}`, "ERROR");
-
-    // === Fallback to OpenRouter Meta Llama 3.3 free ===
-    try {
-      const routerResponse = await axios.post(
-        "https://api.openrouter.ai/v1/chat/completions",
-        {
-          model: "meta-llama/llama-3.3-70b-instruct:free",
-          messages: [
-            {
-              role: "system",
-              content:
-                "You are a helpful WhatsApp assistant for Alphadome. Be professional, warm, and concise. Encourage users to explore Alphadome’s digital ecosystem and community.",
-            },
-            { role: "user", content: userMessage },
-          ],
-        },
-        {
-          headers: {
-            "Authorization": `Bearer ${process.env.OPENROUTER_KEY}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (routerResponse.data.choices && routerResponse.data.choices.length > 0) {
-        const fallbackReply = routerResponse.data.choices[0].message.content;
-        log(`OpenRouter reply: ${fallbackReply}`, "AI");
-        return fallbackReply;
-      } else {
-        log("OpenRouter error: No choices returned", "ERROR");
-        return fallbackMessage();
-      }
-
-    } catch (routerErr) {
-      log(`OpenRouter error: ${routerErr.message}`, "ERROR");
-      return fallbackMessage();
-    }
+    log(`OpenAI error: ${openAIErr.message}`, "ERROR");
   }
+
+  // 2️⃣ Fallback to OpenRouter Meta Llama 3.3 free
+  try {
+    const routerResponse = await axios.post(
+      "https://api.openrouter.ai/v1/chat/completions",
+      {
+        model: "meta-llama/llama-3.3-70b-instruct:free",
+        messages: [systemMessage, { role: "user", content: userMessage }],
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.OPENROUTER_KEY}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (routerResponse.data?.choices?.length > 0) {
+      const routerReply = routerResponse.data.choices[0].message.content;
+      log(`OpenRouter reply: ${routerReply}`, "AI");
+      return routerReply;
+    } else {
+      log("OpenRouter error: No choices returned", "ERROR");
+    }
+
+  } catch (routerErr) {
+    log(`OpenRouter error: ${routerErr.message}`, "ERROR");
+  }
+
+  // 3️⃣ Fallback to HuggingFace free model using axios
+  try {
+    const hfResponse = await axios.post(
+      `https://api-inference.huggingface.co/models/${process.env.HF_MODEL}`,
+      {
+        inputs: userMessage,
+        parameters: { max_new_tokens: 250, return_full_text: false },
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.HF_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const hfData = hfResponse.data;
+    if (hfData?.[0]?.generated_text) {
+      const hfReply = hfData[0].generated_text;
+      log(`HuggingFace reply: ${hfReply}`, "AI");
+      return hfReply;
+    } else {
+      log("HuggingFace error: No generated_text returned", "ERROR");
+    }
+
+  } catch (hfErr) {
+    log(`HuggingFace error: ${hfErr.message}`, "ERROR");
+  }
+
+  // 4️⃣ Static fallback message
+  return fallbackMessage();
 }
 
-// Fallback message function
+// Fallback message function (unchanged)
 function fallbackMessage() {
   return `👋 Hey there! Welcome to *Alphadome* — your all-in-one creative AI ecosystem helping brands, creators, and innovators thrive in the digital world.
 
