@@ -618,73 +618,56 @@ async function sendHelpMenu(from) {
 // ===== GPT REPLY GENERATION ===== 
 // ===== GPT REPLY GENERATION WITH OPENROUTER FALLBACK =====
 // ===== GPT REPLY GENERATION (OpenAI + OpenRouter fallback) =====
+// ===== OpenRouter GPT REPLY =====
 async function generateReply(userMessage) {
-  // --- Step 1: Try OpenAI first ---
   try {
+    // Primary OpenAI GPT call
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-4o-mini", // primary model
       messages: [
-        {
-          role: "system",
-          content:
-            "You are a helpful WhatsApp assistant for Alphadome. Be professional, warm, and concise. Encourage users to explore Alphadome’s digital ecosystem and community.",
-        },
+        { role: "system", content: "You are a helpful WhatsApp assistant for Alphadome. Be professional, warm, and concise. Encourage users to explore Alphadome’s digital ecosystem and community." },
         { role: "user", content: userMessage },
       ],
     });
 
     const reply = completion.choices[0].message.content;
-    log(`Generated reply via OpenAI: ${reply}`, "AI");
+    log(`Generated reply: ${reply}`, "AI");
     return reply;
 
-  } catch (openaiErr) {
+  } catch (err) {
     incrementErrorCount();
-    log(`OpenAI error: ${openaiErr.message}`, "ERROR");
-    log("Falling back to OpenRouter...", "SYSTEM");
-  }
+    log(`OpenAI error: ${err.message}`, "ERROR");
 
-  // --- Step 2: Fallback to OpenRouter ---
-  try {
-    if (!process.env.OPENROUTER_API_KEY || !process.env.OPENROUTER_MODEL) {
-      throw new Error("Missing OpenRouter API key or model environment variables");
-    }
-
-    const response = await axios.post(
-      "https://openrouter.ai/v1/chat/completions",
-      {
-        model: process.env.OPENROUTER_MODEL,
+    // === Fallback to OpenRouter DeepSeek Free ===
+    try {
+      const response = await openai.chat.completions.create({
+        model: process.env.OPENROUTER_MODEL, // DeepSeek Free
         messages: [
-          {
-            role: "system",
-            content:
-              "You are a helpful WhatsApp assistant for Alphadome. Be professional, warm, and concise. Encourage users to explore Alphadome’s digital ecosystem and community.",
-          },
+          { role: "system", content: "You are a helpful WhatsApp assistant for Alphadome. Be professional, warm, and concise. Encourage users to explore Alphadome’s digital ecosystem and community." },
           { role: "user", content: userMessage },
         ],
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        timeout: 15000, // 15 seconds
+      });
+
+      if (response.choices && response.choices.length > 0) {
+        const fallbackReply = response.choices[0].message.content;
+        log(`OpenRouter reply: ${fallbackReply}`, "AI");
+        return fallbackReply;
+      } else {
+        log(`OpenRouter error: No choices returned`, "ERROR");
+        // return your fallback message
+        return fallbackMessage();
       }
-    );
 
-    log("OpenRouter raw response: " + JSON.stringify(response.data), "DEBUG");
-
-    const reply = response.data?.choices?.[0]?.message?.content;
-    if (!reply) throw new Error("No 'choices' returned by OpenRouter");
-
-    log(`Generated reply via OpenRouter: ${reply}`, "AI");
-    return reply;
-
-  } catch (orErr) {
-    incrementErrorCount();
-    log(`OpenRouter error: ${orErr.message}`, "ERROR");
+    } catch (routerErr) {
+      log(`OpenRouter error: ${routerErr.message}`, "ERROR");
+      // return your fallback message
+      return fallbackMessage();
+    }
   }
+}
 
-  // --- Step 3: Ultimate fallback (your existing static message) ---
+// fallback message function
+function fallbackMessage() {
   return `👋 Hey there! Welcome to *Alphadome* — your all-in-one creative AI ecosystem helping brands, creators, and innovators thrive in the digital world.
 
 Here’s a glimpse of what we build and do:
