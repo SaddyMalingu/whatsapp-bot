@@ -618,26 +618,25 @@ async function sendHelpMenu(from) {
 // ===== GPT REPLY GENERATION ===== 
 // ===== GPT REPLY GENERATION WITH OPENROUTER FALLBACK =====
 
-// ===== GPT REPLY WITH MULTI-FALLBACK (Axios Version) =====
+// ===== GPT REPLY WITH MULTI-FALLBACK (Axios + Hugging Face Router) =====
+
 async function generateReply(userMessage) {
-  // System message shared across all providers
   const systemMessage = {
     role: "system",
     content:
-      "You are a helpful WhatsApp assistant for Alphadome. Be professional, warm, and concise. Encourage users to explore Alphadome’s digital ecosystem and community."
+      "You are a helpful WhatsApp assistant for Alphadome. Be professional, warm, and concise. Encourage users to explore Alphadome’s digital ecosystem and community.",
   };
 
   // 1️⃣ Try OpenAI first
   try {
     const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini", // primary model
+      model: "gpt-4o-mini",
       messages: [systemMessage, { role: "user", content: userMessage }],
     });
 
     const reply = completion.choices[0].message.content;
     log(`OpenAI reply: ${reply}`, "AI");
     return reply;
-
   } catch (openAIErr) {
     incrementErrorCount();
     log(`OpenAI error: ${openAIErr.message}`, "ERROR");
@@ -666,18 +665,17 @@ async function generateReply(userMessage) {
     } else {
       log("OpenRouter error: No choices returned", "ERROR");
     }
-
   } catch (routerErr) {
     log(`OpenRouter error: ${routerErr.message}`, "ERROR");
   }
 
-  // 3️⃣ Fallback to HuggingFace free model using axios
+  // 3️⃣ Fallback to Hugging Face (new router-based API)
   try {
     const hfResponse = await axios.post(
-      `https://api-inference.huggingface.co/models/${process.env.HF_MODEL}`,
+      "https://router.huggingface.co/v1/chat/completions",
       {
-        inputs: userMessage,
-        parameters: { max_new_tokens: 250, return_full_text: false },
+        model: "meta-llama/Llama-3.1-8B-Instruct:novita", // ✅ new inference model
+        messages: [systemMessage, { role: "user", content: userMessage }],
       },
       {
         headers: {
@@ -687,15 +685,13 @@ async function generateReply(userMessage) {
       }
     );
 
-    const hfData = hfResponse.data;
-    if (hfData?.[0]?.generated_text) {
-      const hfReply = hfData[0].generated_text;
+    if (hfResponse.data?.choices?.length > 0) {
+      const hfReply = hfResponse.data.choices[0].message.content;
       log(`HuggingFace reply: ${hfReply}`, "AI");
       return hfReply;
     } else {
-      log("HuggingFace error: No generated_text returned", "ERROR");
+      log("HuggingFace error: No choices returned", "ERROR");
     }
-
   } catch (hfErr) {
     log(`HuggingFace error: ${hfErr.message}`, "ERROR");
   }
@@ -704,7 +700,7 @@ async function generateReply(userMessage) {
   return fallbackMessage();
 }
 
-// Fallback message function (unchanged)
+// ===== Fallback message remains unchanged =====
 function fallbackMessage() {
   return `👋 Hey there! Welcome to *Alphadome* — your all-in-one creative AI ecosystem helping brands, creators, and innovators thrive in the digital world.
 
