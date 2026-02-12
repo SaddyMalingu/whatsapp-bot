@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Alphadome | Catalog Viewer</title>
+  <style>
+    body { font-family: Inter, system-ui, Arial, sans-serif; margin: 24px; background: #0b1020; color: #e6e8ee; }
+    h1 { font-size: 20px; margin-bottom: 8px; }
+    p { color: #b7bfd4; }
+    .card { background: #121830; padding: 16px; border-radius: 10px; border: 1px solid #1e2747; max-width: 1100px; }
+    label { display: block; margin-top: 10px; font-weight: 600; }
+    input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #263056; background: #0f1428; color: #fff; }
+    button { margin-top: 12px; padding: 10px 14px; border-radius: 8px; border: 0; background: #4f46e5; color: #fff; font-weight: 600; cursor: pointer; }
+    table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+    th, td { padding: 8px; border-bottom: 1px solid #1e2747; text-align: left; }
+    .row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    .muted { font-size: 12px; color: #9aa5c0; }
+    img { max-width: 60px; border-radius: 6px; }
+    .pill { font-size: 11px; padding: 2px 6px; border-radius: 999px; background: #1e2747; }
+  </style>
+</head>
+<body>
+  <h1>Catalog Viewer</h1>
+  <p>Search products by name or SKU. Images are loaded from the portfolio table.</p>
+
+  <div class="card">
+    <form id="searchForm">
+      <div class="row">
+        <div>
+          <label>Admin Key</label>
+          <input name="admin_key" placeholder="ADMIN_PASS" required />
+        </div>
+        <div>
+          <label>Tenant Phone</label>
+          <input name="tenant_phone" placeholder="0702245555" />
+        </div>
+        <div>
+          <label>Tenant Name (optional)</label>
+          <input name="tenant_name" placeholder="Kassangas Music Shop" />
+        </div>
+      </div>
+
+      <label>Search</label>
+      <input name="q" placeholder="e.g., guitar, KASS-GTR-001" />
+      <button type="submit">Search</button>
+      <div class="muted">Tip: leave search blank to list all products.</div>
+    </form>
+
+    <table id="results">
+      <thead>
+        <tr>
+          <th>Image</th>
+          <th>SKU</th>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Stock</th>
+          <th>Category</th>
+          <th>Tags</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    const form = document.getElementById('searchForm');
+    const tbody = document.querySelector('#results tbody');
+
+    function renderRows(items) {
+      tbody.innerHTML = '';
+      items.forEach(item => {
+        const tr = document.createElement('tr');
+        const img = item.primary_image ? `<img src="${item.primary_image}" />` : '';
+        const tags = (item.metadata?.tags || []).map(t => `<span class="pill">${t}</span>`).join(' ');
+        tr.innerHTML = `
+          <td>${img}</td>
+          <td>${item.sku || ''}</td>
+          <td>${item.name || ''}</td>
+          <td>${item.price ? item.price + ' ' + (item.currency || 'KES') : ''}</td>
+          <td>${item.stock_count ?? ''}</td>
+          <td>${item.metadata?.category || ''}</td>
+          <td>${tags}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const adminKey = form.admin_key.value;
+      const tenantPhone = form.tenant_phone.value;
+      const tenantName = form.tenant_name.value;
+      const q = form.q.value;
+
+      const params = new URLSearchParams();
+      if (tenantPhone) params.set('tenant_phone', tenantPhone);
+      if (tenantName) params.set('tenant_name', tenantName);
+      if (q) params.set('q', q);
+
+      const res = await fetch(`/admin/catalog/data?${params.toString()}`, {
+        headers: { 'x-admin-key': adminKey }
+      });
+
+      const data = await res.json().catch(() => ({ error: 'Invalid response' }));
+      if (data.error) {
+        tbody.innerHTML = `<tr><td colspan="7">${data.error}</td></tr>`;
+        return;
+      }
+      renderRows(data.items || []);
+    });
+  </script>
+</body>
+</html>

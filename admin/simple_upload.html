@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Alphadome | Simple Upload</title>
+  <style>
+    body { font-family: Inter, system-ui, Arial, sans-serif; margin: 24px; background: #0b1020; color: #e6e8ee; }
+    h1 { font-size: 20px; margin-bottom: 8px; }
+    p { color: #b7bfd4; }
+    .card { background: #121830; padding: 16px; border-radius: 10px; border: 1px solid #1e2747; max-width: 880px; }
+    label { display: block; margin-top: 12px; font-weight: 600; }
+    input, textarea { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #263056; background: #0f1428; color: #fff; }
+    input[type="file"] { padding: 6px; }
+    button { margin-top: 16px; padding: 10px 14px; border-radius: 8px; border: 0; background: #4f46e5; color: #fff; font-weight: 600; cursor: pointer; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .muted { font-size: 12px; color: #9aa5c0; }
+    pre { background: #0f1428; padding: 12px; border-radius: 8px; border: 1px solid #263056; overflow: auto; }
+  </style>
+</head>
+<body>
+  <h1>Simple Upload (No SKU/CSV)</h1>
+  <p>Fill in the product details. SKU will be generated automatically. Drag & drop images if available.</p>
+
+  <div class="card">
+    <form id="simpleForm">
+      <div class="row">
+        <div>
+          <label>Admin Key</label>
+          <input name="admin_key" placeholder="ADMIN_PASS" required />
+        </div>
+        <div>
+          <label>Tenant Phone</label>
+          <input name="tenant_phone" placeholder="0702245555" />
+        </div>
+      </div>
+
+      <label>Tenant Name (optional)</label>
+      <input name="tenant_name" placeholder="Kassangas Music Shop" />
+
+      <div class="row">
+        <div>
+          <label>Product Name</label>
+          <input name="name" placeholder="Studio Headphones" required />
+        </div>
+        <div>
+          <label>Price (KES)</label>
+          <input name="price" type="number" step="0.01" placeholder="8200" />
+        </div>
+      </div>
+
+      <div class="row">
+        <div>
+          <label>Stock Count</label>
+          <input name="stock_count" type="number" placeholder="6" />
+        </div>
+        <div>
+          <label>Category</label>
+          <input name="category" placeholder="audio" />
+        </div>
+      </div>
+
+      <label>Tags (comma-separated)</label>
+      <input name="tags" placeholder="headphones,studio" />
+
+      <label>Brand</label>
+      <input name="brand" placeholder="Kassangas" />
+
+      <label>Description</label>
+      <textarea name="description" rows="3"></textarea>
+
+      <label>Collection (optional)</label>
+      <input name="collection" placeholder="Featured" />
+      <label>Collection Description (optional)</label>
+      <input name="collection_description" placeholder="Top picks and best sellers" />
+
+      <label>Images (drag & drop)</label>
+      <input name="images" type="file" multiple />
+
+      <button type="submit">Upload (Auto‑SKU)</button>
+    </form>
+  </div>
+
+  <h3>Response</h3>
+  <pre id="response"></pre>
+
+  <script>
+    const simpleForm = document.getElementById('simpleForm');
+    const responseEl = document.getElementById('response');
+
+    simpleForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      responseEl.textContent = 'Uploading (simple)...';
+
+      const formData = new FormData();
+      const adminKey = simpleForm.admin_key.value;
+      const tenantPhone = simpleForm.tenant_phone.value;
+      const tenantName = simpleForm.tenant_name.value;
+
+      formData.append('tenant_phone', tenantPhone);
+      formData.append('tenant_name', tenantName);
+      formData.append('name', simpleForm.name.value);
+      formData.append('price', simpleForm.price.value);
+      formData.append('stock_count', simpleForm.stock_count.value);
+      formData.append('category', simpleForm.category.value);
+      formData.append('tags', simpleForm.tags.value);
+      formData.append('brand', simpleForm.brand.value);
+      formData.append('description', simpleForm.description.value);
+      formData.append('collection', simpleForm.collection.value);
+      formData.append('collection_description', simpleForm.collection_description.value);
+
+      const files = simpleForm.images.files;
+      for (let i = 0; i < files.length; i++) {
+        formData.append('images', files[i]);
+      }
+
+      const res = await fetch('/admin/catalog/simple', {
+        method: 'POST',
+        headers: { 'x-admin-key': adminKey },
+        body: formData
+      });
+
+      const data = await res.json().catch(() => ({ error: 'Invalid response' }));
+      responseEl.textContent = JSON.stringify(data, null, 2);
+    });
+  </script>
+</body>
+</html>

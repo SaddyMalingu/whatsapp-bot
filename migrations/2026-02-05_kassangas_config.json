@@ -1,0 +1,27 @@
+{
+  "migration": "Migration #2: Kassangas Tenant Setup",
+  "date": "2026-02-05T23:07:19.129Z",
+  "tenant": {
+    "name": "Kassangas Music Shop",
+    "phone": "254700123456",
+    "contact": "Gideon",
+    "contact_phone": "254700123456"
+  },
+  "meta_credentials": {
+    "phone_number_id": "PHONE_NUMBER_ID_PLACEHOLDER",
+    "business_account_id": "ACCOUNT_ID_PLACEHOLDER",
+    "access_token_placeholder": "KEEP SECURE - DO NOT COMMIT"
+  },
+  "webhook": {
+    "verify_token": "c9a8c06ef82567cc2e6fbbce1d260dd1",
+    "url": "https://your-domain.com/webhook"
+  },
+  "next_steps": [
+    "Review the generated SQL migration file",
+    "Copy contents to Supabase SQL Editor",
+    "Run the migration",
+    "Update OpenAI API key",
+    "Verify in Meta Business Manager",
+    "Test with real WhatsApp messages"
+  ]
+}

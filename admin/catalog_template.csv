@@ -1,0 +1,5 @@
+sku,name,description,price,currency,stock_count,image_url,category,tags,brand,collection,collection_description
+KASS-GTR-001,Acoustic Guitar - Classic,Full-size acoustic guitar,12500,KES,8,https://images.unsplash.com/photo-1511376777868-611b54f68947?auto=format&fit=crop&w=800&q=60,guitars,acoustic|guitar|strings,Kassangas,Featured,Top picks and best sellers
+KASS-EGTR-002,Electric Guitar - Sonic Red,Solid-body electric guitar,23500,KES,4,https://images.unsplash.com/photo-1518444023807-0ea5f6b7c3d1?auto=format&fit=crop&w=800&q=60,guitars,electric|guitar|rock,Kassangas,Featured,Top picks and best sellers
+KASS-STR-005,Guitar Strings (Set of 6),Phosphor bronze strings,1200,KES,50,,accessories,strings|guitar|accessory,Kassangas,Accessories,Strings, cases, and add-ons
+KASS-MIC-007,Dynamic Vocal Microphone,Cardioid mic for live vocals,3800,KES,18,,microphones,mic|vocal|live,Kassangas,New Arrivals,Latest instruments in stock

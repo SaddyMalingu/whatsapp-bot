@@ -1,0 +1,191 @@
+═══════════════════════════════════════════════════════════════════════════════
+                         IMMEDIATE ACTION PLAN
+                    Deploy Kassangas WhatsApp Bot - Week 1
+═══════════════════════════════════════════════════════════════════════════════
+
+📅 TODAY - DO NOW (No credentials needed)
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ TASK 1: Run Database Migration #1 (5 min)
+   File:    migrations/2025-02-06_add_bot_tenants_schema.sql
+   Action:  Copy entire file → Supabase SQL Editor → Click RUN
+   Verify:  SELECT table_name FROM information_schema.tables 
+            WHERE table_schema = 'alphadome' AND table_name LIKE 'bot_%'
+   Result:  4 tables created (bot_tenants, bot_templates, bot_training_data, bot_control_settings)
+
+
+✅ TASK 2: Add Tenant Middleware to server.js (30 min)
+   File:    TENANT_MIDDLEWARE_CODE.js (reference)
+   Target:  server.js (line ~50, after getPaymentAmount function)
+   Add:     6 middleware functions:
+            - loadTenantContext()
+            - loadTenantTemplates()
+            - loadTenantTrainingData()
+            - getSystemPrompt()
+            - getDecryptedCredentials()
+   Verify:  npm start (should start without errors)
+
+
+✅ TASK 3: Update generateReply() Function (30 min)
+   File:    TENANT_MIDDLEWARE_CODE.js (reference)
+   Target:  server.js (replace existing generateReply function)
+   Change:  Accept tenant + templates + trainingData parameters
+   New:     Match user questions against FAQ before calling OpenAI
+   Impact:  Faster responses, better customization, tenant-aware
+
+
+✅ TASK 4: Update POST /webhook Handler (45 min)
+   File:    TENANT_MIDDLEWARE_CODE.js (reference)
+   Target:  server.js (update POST /webhook handler)
+   Add:     loadTenantContext middleware to handler
+   Change:  Pass tenant + templates + trainingData to generateReply()
+   Impact:  Every message now routed through tenant context
+   Keep:    All existing M-Pesa/JOIN ALPHADOME logic unchanged
+
+
+✅ TASK 5: Create and Run Test Script (10 min)
+   File:    test_tenant_setup.js (already exists)
+   Action:  npm install chalk (if needed)
+            node test_tenant_setup.js
+   Verify:  6 tests pass
+            Expected: "No tenants found yet (expected - waiting for credentials)"
+   Result:  Database setup confirmed
+
+
+✅ TASK 6: Commit Code Changes (5 min)
+   Action:  git add server.js test_tenant_setup.js
+            git commit -m "feat: add multi-tenant support (Week 1)"
+            git push origin main (or your branch)
+   Result:  Changes saved
+
+
+✅ TASK 7: Send Credential Request to Gideon (5 min)
+   File:    META_CREDENTIALS_CHECKLIST.md (copy message section)
+   Action:  Send via WhatsApp/email to Gideon
+   Include: 3 Meta credentials needed:
+            1. WhatsApp Business Phone Number ID (numeric)
+            2. WhatsApp Business Account ID (optional)
+            3. WhatsApp Access Token (long string, KEEP SECRET)
+   Result:  Waiting for response from Gideon
+
+
+📊 TODAY'S SUMMARY
+═══════════════════════════════════════════════════════════════════════════════
+Time Required:        2-2.5 hours
+Blocking Issues:      NONE
+Code Changes:         YES (significant but backward compatible)
+Database Changes:     YES (4 new tables, no deletions)
+Credential Needed:    NO - all tasks work without credentials
+External Dependencies: NONE for this phase
+Risk Level:           LOW (all changes additive, backward compatible)
+
+Expected State After Today:
+  ✅ Database ready for multi-tenants
+  ✅ Server code tenant-aware
+  ✅ Backward compatible (existing system still works)
+  ✅ Credential request sent to Gideon
+  ✅ System ready to receive Kassangas config
+
+
+⏳ WHEN GIDEON RESPONDS (1-2 days)
+═══════════════════════════════════════════════════════════════════════════════
+
+⏳ TASK 8: Insert Kassangas Tenant (30 min)
+   File:    migrations/2025-02-06_setup_kassangas_tenant.sql
+   Action:  Update 3 placeholders with Gideon's credentials
+            Copy → Supabase SQL Editor → Click RUN
+   Update:  - whatsapp_phone_number_id: 'GIDEON_VALUE'
+            - whatsapp_access_token: 'GIDEON_VALUE'  
+            - client_email: 'gideon@example.com'
+   Result:  Kassangas tenant created with templates + training data
+
+
+⏳ TASK 9: Verify Kassangas Setup (10 min)
+   Action:  node test_tenant_setup.js
+   Verify:  Output shows:
+            ✓ Kassangas tenant found
+            ✓ 3 templates loaded
+            ✓ 9 training entries loaded
+   Result:  System ready for messages
+
+
+⏳ TASK 10: Send Test Message (5 min)
+   Action:  From a WhatsApp account, send message to Kassangas number
+   Verify:  Bot responds using Kassangas's prompt + OpenAI key
+   Result:  End-to-end flow working
+
+
+📋 CREDENTIAL CHECKLIST
+═══════════════════════════════════════════════════════════════════════════════
+
+Required from Gideon (3 items):
+☐ WhatsApp Business Phone Number ID
+  Where: Meta Business Manager → WhatsApp → Phone Numbers
+  Format: Numeric (e.g., 868405499681303)
+  Storage: bot_tenants.whatsapp_phone_number_id
+
+☐ WhatsApp Access Token ⚠️ SECRET
+  Where: Meta Business Manager → Apps → Your App → Messenger → Settings → Token
+  Format: Long string starting with 'EAA' (e.g., EAA...xyz)
+  Storage: bot_tenants.whatsapp_access_token (encrypted in DB)
+
+☐ WhatsApp Business Account ID (optional but helpful)
+  Where: Meta Business Manager → Settings → General → Business ID
+  Format: Numeric (e.g., 108459245087655)
+  Storage: bot_tenants.whatsapp_business_account_id
+
+Can Generate Locally (1 item):
+✅ Verify Token
+  Action: Generate random string (e.g., using crypto.randomBytes(32).toString('hex'))
+  Storage: bot_tenants.webhook_verify_token
+  Purpose: Meta sends this back during webhook verification
+
+
+📂 FILES REFERENCE
+═══════════════════════════════════════════════════════════════════════════════
+
+JUST CREATED:
+  → WEEK1_IMPLEMENTATION_GUIDE.md (this detailed step-by-step guide)
+  → IMMEDIATE_ACTION_PLAN.txt (this summary)
+
+ALREADY EXISTS:
+  → migrations/2025-02-06_add_bot_tenants_schema.sql
+  → migrations/2025-02-06_setup_kassangas_tenant.sql
+  → TENANT_MIDDLEWARE_CODE.js
+  → test_tenant_setup.js
+  → META_CREDENTIALS_CHECKLIST.md
+
+DOCUMENTATION:
+  → 00_START_HERE.txt
+  → EXECUTIVE_SUMMARY.md
+  → DEPLOYMENT_PLAN.md
+  → DB_ALIGNMENT_REPORT.md
+  → MULTI_TENANT_README.md
+  → VISUAL_DIAGRAMS.md
+  → DOCUMENTATION_INDEX.md
+
+
+🚀 START HERE
+═══════════════════════════════════════════════════════════════════════════════
+
+Read:   WEEK1_IMPLEMENTATION_GUIDE.md (full step-by-step)
+        → Contains complete code for each step
+        → Copy-paste ready
+        → Verification commands included
+
+Then Execute:
+  1. STEP 1: Run database migration (5 min)
+  2. STEP 2: Add middleware (30 min)
+  3. STEP 3: Update generateReply() (30 min)
+  4. STEP 4: Update webhook (45 min)
+  5. STEP 5: Test script (10 min)
+  6. STEP 6: Git commit (5 min)
+  7. STEP 7: Credential request (5 min)
+
+Questions? See DOCUMENTATION_INDEX.md
+
+
+═══════════════════════════════════════════════════════════════════════════════
+Status: READY TO EXECUTE
+Last Updated: Feb 6, 2026
+═══════════════════════════════════════════════════════════════════════════════

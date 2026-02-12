@@ -1,0 +1,12 @@
+﻿{
+  "ignore": [
+    "*.env",
+    "*.log",
+    "logs/*",
+    "node_modules/*",
+    "supabase/*",
+    ".vscode/*",
+    "deno.json",
+    "deno.lock"
+  ]
+}

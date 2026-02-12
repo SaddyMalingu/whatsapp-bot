@@ -1,0 +1,193 @@
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                                                                               ║
+║                    🤖 WHATSAPP BOT - DEPLOYMENT CARD 🤖                      ║
+║                      Kassangas Music Shop Instance                            ║
+║                                                                               ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 📍 GIDEON'S DETAILS                                                         │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Name:           Gideon                                                      │
+│ Business:       Kassangas Music Shop                                        │
+│ Phone:          +254 702 245 555 (normalized: 254702245555)               │
+│ Location:       Nairobi, Kenya                                             │
+│ Existing User:  ✅ Already in system (User ID: 823c3bcd-...)              │
+│ Status:         Ready for deployment                                       │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 🔑 META CREDENTIALS NEEDED (from Gideon)                                   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│ 1️⃣  WhatsApp Business Phone Number ID                                      │
+│     Format: Numeric (e.g., 868405499681303)                               │
+│     Where:  Meta Business Manager → WhatsApp → Phone Numbers              │
+│     Status: ⏳ AWAITING FROM GIDEON                                        │
+│                                                                             │
+│ 2️⃣  WhatsApp Access Token ⚠️ KEEP SECRET                                  │
+│     Format: Long string starting with EAA (e.g., EAAOZAitZCbfIMBP2...)  │
+│     Where:  Meta Business Manager → Apps → Your App → Messenger → Token   │
+│     Status: ⏳ AWAITING FROM GIDEON                                        │
+│                                                                             │
+│ 3️⃣  WhatsApp Business Account ID (Optional)                               │
+│     Format: Numeric (e.g., 108459245087655)                               │
+│     Where:  Meta Business Manager → Settings → Business ID                │
+│     Status: ⏳ AWAITING FROM GIDEON (helpful but optional)                │
+│                                                                             │
+│ 4️⃣  Verify Token (Can generate locally)                                    │
+│     Format: Random string                                                 │
+│     Action: Generate in code                                              │
+│     Status: ✅ Can create anytime                                          │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ ✅ WEEK 1: IMMEDIATE TASKS (Do NOW - No credentials needed)               │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│ [ ] 1. Run Database Migration #1                          (5 min)         │
+│        File: migrations/2025-02-06_add_bot_tenants_schema.sql             │
+│        Action: Copy → Supabase SQL Editor → RUN                           │
+│        Creates: 4 new database tables                                     │
+│                                                                             │
+│ [ ] 2. Add Tenant Middleware to server.js                (30 min)         │
+│        Copy 6 functions from TENANT_MIDDLEWARE_CODE.js                   │
+│        Insert after line ~50 in server.js                                │
+│        Functions: loadTenantContext, loadTenantTemplates, etc.           │
+│                                                                             │
+│ [ ] 3. Update generateReply() Function                   (30 min)         │
+│        Replace existing function with tenant-aware version               │
+│        Match questions against FAQ before calling AI                     │
+│                                                                             │
+│ [ ] 4. Update POST /webhook Handler                      (45 min)         │
+│        Pass tenant context to message processing                         │
+│        Keep all existing M-Pesa/subscription logic                       │
+│                                                                             │
+│ [ ] 5. Create & Run Test Script                          (10 min)         │
+│        Run: node test_tenant_setup.js                                    │
+│        Verify: 6 tests pass                                              │
+│                                                                             │
+│ [ ] 6. Commit Code Changes                               (5 min)         │
+│        git add server.js test_tenant_setup.js                            │
+│        git commit -m "feat: add multi-tenant support"                    │
+│                                                                             │
+│ [ ] 7. Send Credential Request to Gideon                 (5 min)         │
+│        Use template from: META_CREDENTIALS_CHECKLIST.md                  │
+│        Send via WhatsApp or email                                        │
+│                                                                             │
+│ ⏱️  TOTAL TIME: 2-2.5 hours                                                │
+│ ⏳ BLOCKERS: NONE                                                           │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ ⏳ WEEK 2: WHEN GIDEON RESPONDS (1-2 days)                                │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│ [ ] 8. Insert Kassangas Tenant in Database              (30 min)          │
+│        File: migrations/2025-02-06_setup_kassangas_tenant.sql            │
+│        Update 3 placeholders with Gideon's credentials                   │
+│        Inserts: 1 tenant + 3 templates + 9 FAQ entries                   │
+│                                                                             │
+│ [ ] 9. Verify Setup                                     (10 min)          │
+│        Run: node test_tenant_setup.js                                    │
+│        Should show: Kassangas tenant found, templates loaded             │
+│                                                                             │
+│ [ ] 10. Test End-to-End Message Flow                    (5-10 min)       │
+│         Send WhatsApp message to Kassangas bot                           │
+│         Verify bot responds with Kassangas config                        │
+│                                                                             │
+│ 🎉 EXPECTED OUTCOME: Full multi-tenant bot active                         │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 📚 DOCUMENTATION FILES (Reference)                                         │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│ START HERE:                                                                │
+│   → IMMEDIATE_ACTION_PLAN.txt (this file - quick overview)               │
+│   → WEEK1_IMPLEMENTATION_GUIDE.md (detailed step-by-step with code)      │
+│                                                                             │
+│ DETAILED GUIDES:                                                           │
+│   → META_CREDENTIALS_CHECKLIST.md (what Gideon needs)                    │
+│   → TENANT_MIDDLEWARE_CODE.js (copy-paste code snippets)                 │
+│   → test_tenant_setup.js (verification script)                           │
+│                                                                             │
+│ REFERENCE DOCS:                                                            │
+│   → EXECUTIVE_SUMMARY.md (5-min overview for all roles)                  │
+│   → DEPLOYMENT_PLAN.md (4-week roadmap)                                  │
+│   → DB_ALIGNMENT_REPORT.md (technical schema deep-dive)                  │
+│   → MULTI_TENANT_README.md (architecture overview)                       │
+│   → VISUAL_DIAGRAMS.md (ASCII diagrams for flows)                        │
+│   → DOCUMENTATION_INDEX.md (navigation guide)                            │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 🔍 QUICK REFERENCE: Key Facts                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│ Current System:         Single tenant (default brand)                      │
+│ After Week 1:           Multi-tenant architecture (code ready)             │
+│ After Gideon Responds:  Kassangas bot active                               │
+│                                                                             │
+│ Database:               Supabase PostgreSQL (twxmfdwemchrswxzjstp)        │
+│ New Tables:             4 (bot_tenants, bot_templates, ...)               │
+│ Breaking Changes:       NONE (fully backward compatible)                   │
+│ Impact on Current Ops:  ZERO (system keeps working as-is)                 │
+│                                                                             │
+│ Credential Risk:        🟢 LOW (encrypted in DB, per-tenant rotation)     │
+│ Deployment Risk:        🟢 LOW (additive changes only)                    │
+│ Testing Coverage:       🟢 GOOD (test script + manual verification)       │
+│                                                                             │
+│ Hosting:                Render (current deployment)                       │
+│ Downtime Required:      ❌ NONE (backward compatible)                     │
+│ Rollback Path:          ✅ Simple (just don't deploy Week 1 code)         │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 🎯 SUCCESS CRITERIA                                                        │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│ ✅ Week 1 Complete When:                                                   │
+│    □ Database migration #1 runs successfully                              │
+│    □ server.js has tenant middleware and compiles                         │
+│    □ test_tenant_setup.js shows all tests pass                            │
+│    □ Code is committed to git                                             │
+│    □ Gideon has received credential request                               │
+│                                                                             │
+│ ✅ Week 2 Complete When:                                                   │
+│    □ Gideon provides 3 Meta credentials                                   │
+│    □ Migration #2 runs successfully                                       │
+│    □ test_tenant_setup.js shows Kassangas tenant found                    │
+│    □ Bot responds to messages from Kassangas number                       │
+│    □ Bot uses Kassangas's custom templates & training                    │
+│                                                                             │
+│ ✅ Full Deployment Complete When:                                          │
+│    □ Dashboard created for Gideon                                         │
+│    □ Gideon can train bot with custom FAQ                                 │
+│    □ Gideon can toggle features on/off                                    │
+│    □ Zero message confusion between Gideon & platform                    │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 🚀 NEXT STEP: What to Do RIGHT NOW                                        │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│ 1. Open: WEEK1_IMPLEMENTATION_GUIDE.md                                     │
+│ 2. Follow STEP 1-7 in order                                                │
+│ 3. Expected time: 2-2.5 hours                                              │
+│ 4. No blockers: All tasks work immediately                                │
+│ 5. When done: Gideon will have been asked for credentials                 │
+│                                                                             │
+│ Questions? Check DOCUMENTATION_INDEX.md                                    │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+                          Ready? Let's Deploy! 🚀
+═══════════════════════════════════════════════════════════════════════════════
