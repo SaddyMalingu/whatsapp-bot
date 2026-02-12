@@ -756,6 +756,21 @@ app.post("/webhook", loadTenantContext, async (req, res) => {
       }
     }
 
+    // STEP 3b: Prefetch DB context for LLM
+    const tenantPhone = req.tenant?.client_phone || req.tenant?._business_phone || null;
+    const [userProfile, brandProfile, catalogMatches] = await Promise.all([
+      fetchUserProfile(userData.id),
+      fetchBrandProfile(brandId),
+      tenantPhone ? fetchCatalogForTenant(tenantPhone, text) : Promise.resolve([]),
+    ]);
+
+    const dbContext = buildDbContext({
+      userProfile,
+      brandProfile,
+      tenant: req.tenant || null,
+      catalogMatches,
+    });
+
     // STEP 3: Load tenant-specific configuration (NEW)
     let templates = [];
     let trainingData = [];
@@ -1012,7 +1027,9 @@ if (text.match(/^2547\d{7}$/) || text.toLowerCase() === "same") {
       req.tenant || null,
       templates.length > 0 ? templates : null,
       trainingData,
-      contextMessages
+      contextMessages,
+      catalogMatches,
+      dbContext
     );
     const creds = getDecryptedCredentials(req.tenant);
     if (reply?.type === "catalog") {
@@ -1024,16 +1041,26 @@ if (text.match(/^2547\d{7}$/) || text.toLowerCase() === "same") {
       const sections = buildCatalogList(items);
       await sendInteractiveList(from, "Here are matching items:", "View items", sections, creds);
     } else {
-      await sendMessage(from, reply, creds);
+      const replyText = reply?.type === "text" ? reply.text : typeof reply === "string" ? reply : "";
+      if (replyText) {
+        await sendMessage(from, replyText, creds);
+      }
     }
 
     // STEP 6: Log outbound message
+    const replyMeta = reply?.meta || null;
+    const outgoingText = reply?.type === "text" ? reply.text : typeof reply === "string" ? reply : "CATALOG_LIST";
     const { error: outErr } = await supabase.from("conversations").insert([
       {
         brand_id: brandId,
         user_id: userData.id,
         direction: "outgoing",
-        message_text: typeof reply === "string" ? reply : "CATALOG_LIST",
+        message_text: outgoingText,
+        llm_used: replyMeta?.llm_used ?? null,
+        llm_provider: replyMeta?.llm_provider ?? null,
+        llm_latency_ms: replyMeta?.llm_latency_ms ?? null,
+        llm_error: replyMeta?.llm_error ?? null,
+        llm_reason: replyMeta?.reason ?? null,
         created_at: new Date().toISOString(),
       },
     ]);
@@ -1325,7 +1352,7 @@ function buildCatalogList(items = []) {
   }];
 }
 
-async function generateReply(userMessage, tenant = null, templates = null, trainingData = [], contextMessages = []) {
+async function generateReply(userMessage, tenant = null, templates = null, trainingData = [], contextMessages = [], catalogMatches = [], dbContext = "") {
   const creds = getDecryptedCredentials(tenant);
   const openaiClient = new OpenAI({ apiKey: creds.aiApiKey });
   const systemMessage = {
@@ -1333,14 +1360,26 @@ async function generateReply(userMessage, tenant = null, templates = null, train
     content: getSystemPrompt(tenant, templates || [], trainingData || []),
   };
 
+  log(
+    `LLM providers: openai=${Boolean(creds.aiApiKey)} openrouter=${Boolean(process.env.OPENROUTER_KEY)} hf=${Boolean(process.env.HF_API_KEY)}`,
+    "SYSTEM"
+  );
+
   // 0️⃣ Try catalog search first (tenant-aware)
   const tenantPhone = tenant?.client_phone || tenant?._business_phone;
-  if (tenantPhone) {
-    const items = await fetchCatalogForTenant(tenantPhone, userMessage);
+  const items = catalogMatches?.length
+    ? catalogMatches
+    : tenantPhone
+      ? await fetchCatalogForTenant(tenantPhone, userMessage)
+      : [];
+  if (items.length) {
     const catalogReply = formatCatalogReply(items);
     if (catalogReply) {
       log(`✓ Catalog match: ${items.length} items`, "AI");
-      return catalogReply;
+      return {
+        ...catalogReply,
+        meta: { llm_used: false, reason: "catalog" },
+      };
     }
   }
 
@@ -1348,85 +1387,146 @@ async function generateReply(userMessage, tenant = null, templates = null, train
   const trainingReply = findTrainingAnswer(trainingData || [], userMessage);
   if (trainingReply) {
     log("✓ Training data match", "AI");
-    return trainingReply;
+    return {
+      type: "text",
+      text: trainingReply,
+      meta: { llm_used: false, reason: "training" },
+    };
   }
 
-  // If tenant-aware, do NOT answer outside brand data
-  if (tenant) {
-    return "I can only answer from the brand catalog and approved brand data. Please share a product name, SKU, or ask for a human agent.";
+  // If tenant-aware but no AI providers configured, give a safe fallback
+  if (tenant && !creds.aiApiKey && !process.env.OPENROUTER_KEY && !process.env.HF_API_KEY) {
+    log("No LLM credentials available; returning guardrail reply", "SYSTEM");
+    return {
+      type: "text",
+      text: "I can only answer from the brand catalog and approved brand data. Please share a product name, SKU, or ask for a human agent.",
+      meta: { llm_used: false, reason: "no_llm_credentials" },
+    };
   }
 
-  // 1️⃣ Try OpenAI first
-  try {
-    const completion = await openaiClient.chat.completions.create({
-      model: creds.aiModel,
-      messages: [systemMessage, ...(contextMessages || []), { role: "user", content: userMessage }],
-    });
+  log(`LLM context: ${contextMessages?.length || 0} messages`, "SYSTEM");
 
-    const reply = completion.choices[0].message.content;
-    log(`✓ ${creds.aiProvider} reply: ${reply.substring(0, 50)}...`, "AI");
-    return reply;
-  } catch (openAIErr) {
-    incrementErrorCount();
-    log(`${creds.aiProvider} error: ${openAIErr.message}`, "ERROR");
+  const contextBlock = dbContext
+    ? { role: "system", content: `Context data:\n${dbContext}` }
+    : null;
+  const messageStack = [
+    systemMessage,
+    ...(contextBlock ? [contextBlock] : []),
+    ...(contextMessages || []),
+    { role: "user", content: userMessage },
+  ];
+
+  // 1️⃣ Try OpenAI first (only if key is present)
+  if (creds.aiApiKey) {
+    log("LLM path: OpenAI", "SYSTEM");
+    try {
+      const start = Date.now();
+      const completion = await openaiClient.chat.completions.create({
+        model: creds.aiModel,
+        messages: messageStack,
+      });
+
+      const reply = completion.choices[0].message.content;
+      const latency = Date.now() - start;
+      log(`✓ ${creds.aiProvider} reply: ${reply.substring(0, 50)}...`, "AI");
+      return {
+        type: "text",
+        text: reply,
+        meta: { llm_used: true, llm_provider: "openai", llm_latency_ms: latency },
+      };
+    } catch (openAIErr) {
+      incrementErrorCount();
+      log(`${creds.aiProvider} error: ${openAIErr.message}`, "ERROR");
+      if (!process.env.OPENROUTER_KEY && !process.env.HF_API_KEY) {
+        return {
+          type: "text",
+          text: fallbackMessage(),
+          meta: { llm_used: false, reason: "openai_error", llm_error: openAIErr.message },
+        };
+      }
+    }
+  } else {
+    log("OpenAI key missing; skipping OpenAI call", "SYSTEM");
   }
 
   // 2️⃣ Fallback to OpenRouter Meta Llama 3.3 free
-  try {
-    const routerResponse = await axios.post(
-      "https://api.openrouter.ai/v1/chat/completions",
-      {
-        model: "meta-llama/llama-3.3-70b-instruct:free",
-        messages: [systemMessage, ...(contextMessages || []), { role: "user", content: userMessage }],
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.OPENROUTER_KEY}`,
-          "Content-Type": "application/json",
+  if (process.env.OPENROUTER_KEY) {
+    try {
+      log("LLM path: OpenRouter", "SYSTEM");
+      const start = Date.now();
+      const routerResponse = await axios.post(
+        "https://api.openrouter.ai/v1/chat/completions",
+        {
+          model: "meta-llama/llama-3.3-70b-instruct:free",
+          messages: messageStack,
         },
-      }
-    );
+        {
+          headers: {
+            Authorization: `Bearer ${process.env.OPENROUTER_KEY}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-    if (routerResponse.data?.choices?.length > 0) {
-      const routerReply = routerResponse.data.choices[0].message.content;
-      log(`✓ OpenRouter reply: ${routerReply.substring(0, 50)}...`, "AI");
-      return routerReply;
-    } else {
-      log("OpenRouter error: No choices returned", "ERROR");
+      if (routerResponse.data?.choices?.length > 0) {
+        const routerReply = routerResponse.data.choices[0].message.content;
+        const latency = Date.now() - start;
+        log(`✓ OpenRouter reply: ${routerReply.substring(0, 50)}...`, "AI");
+        return {
+          type: "text",
+          text: routerReply,
+          meta: { llm_used: true, llm_provider: "openrouter", llm_latency_ms: latency },
+        };
+      } else {
+        log("OpenRouter error: No choices returned", "ERROR");
+      }
+    } catch (routerErr) {
+      log(`OpenRouter error: ${routerErr.message}`, "ERROR");
     }
-  } catch (routerErr) {
-    log(`OpenRouter error: ${routerErr.message}`, "ERROR");
   }
 
   // 3️⃣ Fallback to Hugging Face (new router-based API)
-  try {
-    const hfResponse = await axios.post(
-      "https://router.huggingface.co/v1/chat/completions",
-      {
-        model: "meta-llama/Llama-3.1-8B-Instruct:novita", // ✅ new inference model
-        messages: [systemMessage, ...(contextMessages || []), { role: "user", content: userMessage }],
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.HF_API_KEY}`,
-          "Content-Type": "application/json",
+  if (process.env.HF_API_KEY) {
+    try {
+      log("LLM path: HuggingFace", "SYSTEM");
+      const start = Date.now();
+      const hfResponse = await axios.post(
+        "https://router.huggingface.co/v1/chat/completions",
+        {
+          model: "meta-llama/Llama-3.1-8B-Instruct:novita", // ✅ new inference model
+          messages: messageStack,
         },
-      }
-    );
+        {
+          headers: {
+            Authorization: `Bearer ${process.env.HF_API_KEY}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-    if (hfResponse.data?.choices?.length > 0) {
-      const hfReply = hfResponse.data.choices[0].message.content;
-      log(`✓ HuggingFace reply: ${hfReply.substring(0, 50)}...`, "AI");
-      return hfReply;
-    } else {
-      log("HuggingFace error: No choices returned", "ERROR");
+      if (hfResponse.data?.choices?.length > 0) {
+        const hfReply = hfResponse.data.choices[0].message.content;
+        const latency = Date.now() - start;
+        log(`✓ HuggingFace reply: ${hfReply.substring(0, 50)}...`, "AI");
+        return {
+          type: "text",
+          text: hfReply,
+          meta: { llm_used: true, llm_provider: "huggingface", llm_latency_ms: latency },
+        };
+      } else {
+        log("HuggingFace error: No choices returned", "ERROR");
+      }
+    } catch (hfErr) {
+      log(`HuggingFace error: ${hfErr.message}`, "ERROR");
     }
-  } catch (hfErr) {
-    log(`HuggingFace error: ${hfErr.message}`, "ERROR");
   }
 
   // 4️⃣ Static fallback message
-  return fallbackMessage();
+  return {
+    type: "text",
+    text: fallbackMessage(),
+    meta: { llm_used: false, reason: "fallback" },
+  };
 }
 
 // ===== Fallback message remains unchanged =====
@@ -1707,3 +1807,93 @@ app.listen(process.env.PORT, () => {
   console.log(`🚀 Server running on port ${process.env.PORT}`);
 });
 
+// DB Context Functions for LLM
+
+async function fetchUserProfile(userId) {
+  if (!userId) return null;
+  const { data, error } = await supabase
+    .from("users")
+    .select("id, phone, full_name, subscribed, subscription_type, subscription_level")
+    .eq("id", userId)
+    .maybeSingle();
+  if (error) {
+    log(`User profile error: ${error.message}`, "WARN");
+    return null;
+  }
+  return data || null;
+}
+
+async function fetchBrandProfile(brandId) {
+  if (!brandId) return null;
+  const { data, error} = await supabase
+    .from("brands")
+    .select("*")
+    .eq("id", brandId)
+    .maybeSingle();
+  if (error) {
+    log(`Brand profile error: ${error.message}`, "WARN");
+    return null;
+  }
+  return data || null;
+}
+
+function buildDbContext({ userProfile, brandProfile, tenant, catalogMatches = [] }) {
+  const blocks = [];
+
+  if (tenant) {
+    const tenantBlock = {
+      client_name: tenant.client_name,
+      client_phone: tenant.client_phone,
+      client_email: tenant.client_email,
+      brand_id: tenant.brand_id,
+      point_of_contact_name: tenant.point_of_contact_name,
+      point_of_contact_phone: tenant.point_of_contact_phone,
+    };
+    blocks.push(`Tenant profile:\n${JSON.stringify(tenantBlock, null, 2)}`);
+  }
+
+  if (brandProfile) {
+    const brandBlock = {
+      id: brandProfile.id,
+      name: brandProfile.name || brandProfile.brand_name || null,
+      description: brandProfile.description || brandProfile.bio || null,
+      website: brandProfile.website || null,
+      email: brandProfile.email || null,
+      phone: brandProfile.phone || null,
+      location: brandProfile.location || null,
+      industry: brandProfile.industry || null,
+      category: brandProfile.category || null,
+      tagline: brandProfile.tagline || null,
+    };
+    blocks.push(`Brand profile:\n${JSON.stringify(brandBlock, null, 2)}`);
+  }
+
+  if (userProfile) {
+    const userBlock = {
+      id: userProfile.id,
+      phone: userProfile.phone,
+      full_name: userProfile.full_name,
+      subscribed: userProfile.subscribed,
+      subscription_type: userProfile.subscription_type,
+      subscription_level: userProfile.subscription_level,
+    };
+    blocks.push(`User profile:\n${JSON.stringify(userBlock, null, 2)}`);
+  }
+
+  if (catalogMatches.length) {
+    const catalogBlock = catalogMatches.slice(0, 5).map((item) => ({
+      sku: item.sku || item.id,
+      name: item.name,
+      price: item.price,
+      currency: item.currency || "KES",
+      stock_count: item.stock_count,
+      category: item.category || item.metadata?.category || null,
+      tags: item.tags || item.metadata?.tags || null,
+    }));
+    blocks.push(`Catalog matches:\n${JSON.stringify(catalogBlock, null, 2)}`);
+  }
+
+  return blocks.join("\n\n").trim();
+}
+
+export { fetchUserProfile, fetchBrandProfile, buildDbContext };
