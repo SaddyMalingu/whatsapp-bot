@@ -1,50 +1,237 @@
+
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Alphadome | Tenant Catalog Upload</title>
+  <title>Alphadome Admin Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <style>
-    body { font-family: Inter, system-ui, Arial, sans-serif; margin: 24px; background: #0b1020; color: #e6e8ee; }
-    h1 { font-size: 20px; margin-bottom: 8px; }
-    p { color: #b7bfd4; }
-    .card { background: #121830; padding: 16px; border-radius: 10px; border: 1px solid #1e2747; max-width: 880px; }
-    label { display: block; margin-top: 12px; font-weight: 600; }
-    input, textarea { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #263056; background: #0f1428; color: #fff; }
-    input[type="file"] { padding: 6px; }
-    button { margin-top: 16px; padding: 10px 14px; border-radius: 8px; border: 0; background: #4f46e5; color: #fff; font-weight: 600; cursor: pointer; }
-    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .muted { font-size: 12px; color: #9aa5c0; }
-    pre { background: #0f1428; padding: 12px; border-radius: 8px; border: 1px solid #263056; overflow: auto; }
+    body {
+      font-family: 'Inter', system-ui, Arial, sans-serif;
+      margin: 0;
+      background: linear-gradient(120deg, #181c2f 0%, #232a4d 100%);
+      color: #e6e8ee;
+      min-height: 100vh;
+      display: flex;
+    }
+    .sidebar {
+      width: 240px;
+      background: #15182b;
+      border-right: 1px solid #232a4d;
+      padding: 32px 0 0 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 10;
+    }
+    .sidebar .logo {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #a5eaff;
+      margin-bottom: 32px;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .sidebar nav {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    .sidebar nav a {
+      color: #b7bfd4;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 12px 32px;
+      border-left: 4px solid transparent;
+      transition: all 0.2s;
+      font-size: 1.08rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .sidebar nav a.active, .sidebar nav a:hover {
+      color: #fff;
+      background: #232a4d;
+      border-left: 4px solid #4f46e5;
+    }
+    .main {
+      margin-left: 240px;
+      padding: 40px 5vw 40px 5vw;
+      width: 100%;
+      max-width: 1200px;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+    }
+    .header h1 {
+      font-size: 2.1rem;
+      font-weight: 700;
+      margin: 0;
+      color: #a5eaff;
+      letter-spacing: 1px;
+    }
+    .header .user {
+      font-size: 1.1rem;
+      color: #b7bfd4;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .card {
+      background: #181c2f;
+      padding: 32px 28px 28px 28px;
+      border-radius: 16px;
+      border: 1px solid #232a4d;
+      margin-bottom: 32px;
+      box-shadow: 0 2px 16px 0 rgba(30,39,71,0.10);
+      max-width: 900px;
+      width: 100%;
+      transition: box-shadow 0.2s;
+    }
+    .card:hover {
+      box-shadow: 0 4px 32px 0 rgba(30,39,71,0.18);
+    }
+    label {
+      display: block;
+      margin-top: 18px;
+      font-weight: 600;
+      color: #a5eaff;
+      letter-spacing: 0.5px;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #263056;
+      background: #10162a;
+      color: #fff;
+      margin-top: 6px;
+      font-size: 1rem;
+      transition: border 0.2s;
+    }
+    input:focus, textarea:focus, select:focus {
+      border: 1.5px solid #4f46e5;
+      outline: none;
+    }
+    input[type="file"] {
+      padding: 8px;
+      background: #10162a;
+      color: #a5eaff;
+    }
+    button {
+      margin-top: 24px;
+      padding: 12px 22px;
+      border-radius: 8px;
+      border: 0;
+      background: linear-gradient(90deg, #4f46e5 0%, #38bdf8 100%);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.08rem;
+      cursor: pointer;
+      box-shadow: 0 2px 8px 0 rgba(79,70,229,0.10);
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    button:hover {
+      background: linear-gradient(90deg, #38bdf8 0%, #4f46e5 100%);
+      box-shadow: 0 4px 16px 0 rgba(79,70,229,0.18);
+    }
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+    .muted {
+      font-size: 13px;
+      color: #9aa5c0;
+      margin-top: 4px;
+    }
+    pre {
+      background: #10162a;
+      padding: 16px;
+      border-radius: 10px;
+      border: 1px solid #232a4d;
+      overflow: auto;
+      color: #a5eaff;
+      font-size: 1rem;
+      margin-top: 0;
+    }
+    .webhook-info {
+      background: linear-gradient(90deg, #232a4d 0%, #1e2747 100%);
+      color: #e6e8ee;
+      border-radius: 10px;
+      padding: 18px;
+      margin-bottom: 28px;
+      border: 1px solid #263056;
+      font-size: 1.08rem;
+      box-shadow: 0 2px 8px 0 rgba(30,39,71,0.08);
+    }
+    .webhook-info code {
+      background: #0f1428;
+      color: #a5eaff;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+    @media (max-width: 900px) {
+      .main { padding: 32px 2vw 32px 2vw; }
+      .card { padding: 20px 8px 18px 8px; }
+      .sidebar { width: 60px; padding: 18px 0 0 0; }
+      .sidebar .logo { font-size: 1.2rem; }
+      .sidebar nav a { font-size: 0.95rem; padding: 10px 10px; }
+      .main { margin-left: 60px; }
+    }
   </style>
 </head>
 <body>
-  <h1>Tenant Catalog Upload</h1>
-  <p>Upload products and images for a tenant. Images should be named by SKU (e.g., KASS-GTR-001.jpg).</p>
-
-  <p class="muted">Quick links: 
-    <a href="/admin/simple" target="_blank" style="color:#9aa5c0;">Simple Upload</a> | 
-    <a href="/admin/catalog" target="_blank" style="color:#9aa5c0;">Catalog Viewer</a>
-  </p>
-
-  <div class="card">
-    <form id="uploadForm">
-      <div class="row">
-        <div>
-          <label>Admin Key</label>
-          <input name="admin_key" placeholder="ADMIN_PASS" required />
+  <div class="sidebar">
+    <div class="logo"><i class="fa-solid fa-cube"></i> Alphadome</div>
+    <nav>
+      <a href="/admin" class="active"><i class="fa-solid fa-upload"></i> Upload</a>
+      <a href="/admin/simple"><i class="fa-solid fa-plus"></i> Simple Upload</a>
+      <a href="/admin/catalog"><i class="fa-solid fa-table-list"></i> Catalog Viewer</a>
+      <a href="/logs/live"><i class="fa-solid fa-wave-square"></i> Live Logs</a>
+    </nav>
+  </div>
+  <div class="main">
+    <div class="header">
+      <h1>Admin Dashboard</h1>
+      <div class="user"><i class="fa-solid fa-user-shield"></i> Admin</div>
+    </div>
+    <div class="webhook-info">
+      <strong><i class="fa-solid fa-bolt"></i> Catalog Webhook:</strong> Real-time catalog sync is enabled.<br>
+      POST updates to <code>/webhook/catalog</code> (see <a href="/admin/catalog_webhook.js" style="color:#a5eaff;">catalog_webhook.js</a> for integration).<br>
+      <span class="muted">Use this endpoint to push catalog changes from external systems for instant accuracy.</span>
+    </div>
+    <div class="card">
+      <h2 style="margin-top:0; color:#38bdf8;">Tenant Catalog Upload</h2>
+      <p style="color:#b7bfd4;">Upload products and images for a tenant. Images should be named by SKU (e.g., KASS-GTR-001.jpg).</p>
+      <form id="uploadForm">
+        <div class="row">
+          <div>
+            <label>Admin Key</label>
+            <input name="admin_key" placeholder="ADMIN_PASS" required />
+          </div>
+          <div>
+            <label>Tenant Phone</label>
+            <input name="tenant_phone" placeholder="0702245555" />
+          </div>
         </div>
-        <div>
-          <label>Tenant Phone</label>
-          <input name="tenant_phone" placeholder="0702245555" />
-        </div>
-      </div>
-
-      <label>Tenant Name (optional)</label>
-      <input name="tenant_name" placeholder="Kassangas Music Shop" />
-
-      <label>Products JSON</label>
-      <textarea name="products_json" rows="8">[
+        <label>Tenant Name (optional)</label>
+        <input name="tenant_name" placeholder="Kassangas Music Shop" />
+        <label>Products JSON</label>
+        <textarea name="products_json" rows="8">[
   {
     "sku": "KASS-NEW-009",
     "name": "Studio Headphones",
@@ -56,171 +243,143 @@
     "metadata": {"category":"audio","tags":["headphones","studio"],"brand":"Kassangas"}
   }
 ]</textarea>
-
-      <label>Images (named by SKU)</label>
-      <input name="images" type="file" multiple />
-      <div class="muted">Example filenames: KASS-NEW-009.jpg, KASS-GTR-001.png</div>
-
-      <button type="submit">Upload</button>
-    </form>
+        <label>Images (named by SKU)</label>
+        <input name="images" type="file" multiple />
+        <div class="muted">Example filenames: KASS-NEW-009.jpg, KASS-GTR-001.png</div>
+        <button type="submit"><i class="fa-solid fa-upload"></i> Upload</button>
+      </form>
+    </div>
+    <div class="card">
+      <h2 style="margin-top:0; color:#38bdf8;">Simple Upload (No SKU/CSV)</h2>
+      <form id="simpleForm">
+        <div class="row">
+          <div>
+            <label>Admin Key</label>
+            <input name="admin_key" placeholder="ADMIN_PASS" required />
+          </div>
+          <div>
+            <label>Tenant Phone</label>
+            <input name="tenant_phone" placeholder="0702245555" />
+          </div>
+        </div>
+        <label>Tenant Name (optional)</label>
+        <input name="tenant_name" placeholder="Kassangas Music Shop" />
+        <div class="row">
+          <div>
+            <label>Product Name</label>
+            <input name="name" placeholder="Studio Headphones" required />
+          </div>
+          <div>
+            <label>Price (KES)</label>
+            <input name="price" type="number" step="0.01" placeholder="8200" />
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label>Stock Count</label>
+            <input name="stock_count" type="number" placeholder="6" />
+          </div>
+          <div>
+            <label>Category</label>
+            <input name="category" placeholder="audio" />
+          </div>
+        </div>
+        <label>Tags (comma-separated)</label>
+        <input name="tags" placeholder="headphones,studio" />
+        <label>Brand</label>
+        <input name="brand" placeholder="Kassangas" />
+        <label>Description</label>
+        <textarea name="description" rows="3"></textarea>
+        <label>Collection (optional)</label>
+        <input name="collection" placeholder="Featured" />
+        <label>Collection Description (optional)</label>
+        <input name="collection_description" placeholder="Top picks and best sellers" />
+        <label>Images (drag & drop)</label>
+        <input name="images" type="file" multiple />
+        <button type="submit"><i class="fa-solid fa-plus"></i> Upload (Auto‑SKU)</button>
+      </form>
+    </div>
+    <div class="card">
+      <h2 style="margin-top:0; color:#38bdf8;">CSV Import</h2>
+      <form id="csvForm">
+        <div class="row">
+          <div>
+            <label>Admin Key</label>
+            <input name="admin_key" placeholder="ADMIN_PASS" required />
+          </div>
+          <div>
+            <label>Tenant Phone</label>
+            <input name="tenant_phone" placeholder="0702245555" />
+          </div>
+        </div>
+        <label>Tenant Name (optional)</label>
+        <input name="tenant_name" placeholder="Kassangas Music Shop" />
+        <label>Catalog CSV</label>
+        <input name="catalog_csv" type="file" accept=".csv" required />
+        <div class="muted">Columns: sku,name,description,price,currency,stock_count,image_url,category,tags,brand,collection,collection_description</div>
+        <button type="submit"><i class="fa-solid fa-file-csv"></i> Import CSV</button>
+      </form>
+    </div>
+    <div class="card">
+      <h2 style="margin-top:0; color:#38bdf8;">Response</h2>
+      <pre id="response"></pre>
+    </div>
   </div>
-
-  <div class="card" style="margin-top:16px;">
-    <form id="simpleForm">
-      <h3>Simple Upload (No SKU/CSV)</h3>
-      <div class="row">
-        <div>
-          <label>Admin Key</label>
-          <input name="admin_key" placeholder="ADMIN_PASS" required />
-        </div>
-        <div>
-          <label>Tenant Phone</label>
-          <input name="tenant_phone" placeholder="0702245555" />
-        </div>
-      </div>
-
-      <label>Tenant Name (optional)</label>
-      <input name="tenant_name" placeholder="Kassangas Music Shop" />
-
-      <div class="row">
-        <div>
-          <label>Product Name</label>
-          <input name="name" placeholder="Studio Headphones" required />
-        </div>
-        <div>
-          <label>Price (KES)</label>
-          <input name="price" type="number" step="0.01" placeholder="8200" />
-        </div>
-      </div>
-
-      <div class="row">
-        <div>
-          <label>Stock Count</label>
-          <input name="stock_count" type="number" placeholder="6" />
-        </div>
-        <div>
-          <label>Category</label>
-          <input name="category" placeholder="audio" />
-        </div>
-      </div>
-
-      <label>Tags (comma-separated)</label>
-      <input name="tags" placeholder="headphones,studio" />
-
-      <label>Brand</label>
-      <input name="brand" placeholder="Kassangas" />
-
-      <label>Description</label>
-      <textarea name="description" rows="3"></textarea>
-
-      <label>Collection (optional)</label>
-      <input name="collection" placeholder="Featured" />
-      <label>Collection Description (optional)</label>
-      <input name="collection_description" placeholder="Top picks and best sellers" />
-
-      <label>Images (drag & drop)</label>
-      <input name="images" type="file" multiple />
-
-      <button type="submit">Upload (Auto‑SKU)</button>
-    </form>
-  </div>
-
-  <div class="card" style="margin-top:16px;">
-    <form id="csvForm">
-      <h3>CSV Import</h3>
-      <div class="row">
-        <div>
-          <label>Admin Key</label>
-          <input name="admin_key" placeholder="ADMIN_PASS" required />
-        </div>
-        <div>
-          <label>Tenant Phone</label>
-          <input name="tenant_phone" placeholder="0702245555" />
-        </div>
-      </div>
-
-      <label>Tenant Name (optional)</label>
-      <input name="tenant_name" placeholder="Kassangas Music Shop" />
-
-      <label>Catalog CSV</label>
-      <input name="catalog_csv" type="file" accept=".csv" required />
-      <div class="muted">Columns: sku,name,description,price,currency,stock_count,image_url,category,tags,brand,collection,collection_description</div>
-
-      <button type="submit">Import CSV</button>
-    </form>
-  </div>
-
-  <h3>Response</h3>
-  <pre id="response"></pre>
-
   <script>
+    // ...existing code for form handling...
     const form = document.getElementById('uploadForm');
     const responseEl = document.getElementById('response');
-
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       responseEl.textContent = 'Uploading...';
-
       const formData = new FormData();
       const adminKey = form.admin_key.value;
       const tenantPhone = form.tenant_phone.value;
       const tenantName = form.tenant_name.value;
       const productsJson = form.products_json.value;
-
       formData.append('tenant_phone', tenantPhone);
       formData.append('tenant_name', tenantName);
       formData.append('products_json', productsJson);
-
       const files = form.images.files;
       for (let i = 0; i < files.length; i++) {
         formData.append('images', files[i]);
       }
-
       const res = await fetch('/admin/catalog/upload', {
         method: 'POST',
         headers: { 'x-admin-key': adminKey },
         body: formData
       });
-
       const data = await res.json().catch(() => ({ error: 'Invalid response' }));
       responseEl.textContent = JSON.stringify(data, null, 2);
     });
-
     const csvForm = document.getElementById('csvForm');
     csvForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       responseEl.textContent = 'Importing CSV...';
-
       const formData = new FormData();
       const adminKey = csvForm.admin_key.value;
       const tenantPhone = csvForm.tenant_phone.value;
       const tenantName = csvForm.tenant_name.value;
       const csvFile = csvForm.catalog_csv.files[0];
-
       formData.append('tenant_phone', tenantPhone);
       formData.append('tenant_name', tenantName);
       formData.append('catalog_csv', csvFile);
-
       const res = await fetch('/admin/catalog/import-csv', {
         method: 'POST',
         headers: { 'x-admin-key': adminKey },
         body: formData
       });
-
       const data = await res.json().catch(() => ({ error: 'Invalid response' }));
       responseEl.textContent = JSON.stringify(data, null, 2);
     });
-
     const simpleForm = document.getElementById('simpleForm');
     simpleForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       responseEl.textContent = 'Uploading (simple)...';
-
       const formData = new FormData();
       const adminKey = simpleForm.admin_key.value;
       const tenantPhone = simpleForm.tenant_phone.value;
       const tenantName = simpleForm.tenant_name.value;
-
       formData.append('tenant_phone', tenantPhone);
       formData.append('tenant_name', tenantName);
       formData.append('name', simpleForm.name.value);
@@ -232,18 +391,15 @@
       formData.append('description', simpleForm.description.value);
       formData.append('collection', simpleForm.collection.value);
       formData.append('collection_description', simpleForm.collection_description.value);
-
       const files = simpleForm.images.files;
       for (let i = 0; i < files.length; i++) {
         formData.append('images', files[i]);
       }
-
       const res = await fetch('/admin/catalog/simple', {
         method: 'POST',
         headers: { 'x-admin-key': adminKey },
         body: formData
       });
-
       const data = await res.json().catch(() => ({ error: 'Invalid response' }));
       responseEl.textContent = JSON.stringify(data, null, 2);
     });
