@@ -240,6 +240,27 @@ function buildTrainingContext(trainingData = []) {
 }
 
 function getSystemPrompt(tenant = null, templates = [], trainingData = []) {
+  // ALPHADOME PLATFORM (no specific tenant)
+  if (!tenant) {
+    const alphadomePrompt = `You are Alphadome, the AI ecosystem orchestrator for African brands.
+
+YOUR ROLE:
+✅ Help brands grow via AI automation
+✅ Activate new tenant bots for their businesses  
+✅ Route customers to partner businesses
+✅ Provide platform-wide business consulting
+
+KEY CAPABILITIES:
+- Recognize when users need specific services and route them
+- Activate new tenant bots with a simple conversation
+- Explain the Alphadome multi-tenant ecosystem
+- Track where users are in the system
+
+TONE: Professional, helpful, growth-oriented. Always maintain context that you're the platform holding these bots together.`;
+    return alphadomePrompt;
+  }
+
+  // TENANT-SPECIFIC BOT (Kassangas, etc.)
   const brandName = tenant?.client_name || "Alphadome";
   let basePrompt = `You are a helpful WhatsApp assistant for ${brandName}. Be professional, warm, and concise.`;
 
@@ -1352,7 +1373,136 @@ function buildCatalogList(items = []) {
   }];
 }
 
+// ===== TENANT MANAGEMENT FUNCTIONS (ALPHADOME SYSTEM) =====
+
+async function getActiveTenants() {
+  try {
+    const { data, error } = await supabase.rpc("get_active_tenants");
+    if (error) {
+      log(`Error fetching tenants: ${error.message}`, "WARN");
+      return [];
+    }
+    return data || [];
+  } catch (err) {
+    log(`Exception in getActiveTenants: ${err.message}`, "ERROR");
+    return [];
+  }
+}
+
+function matchTenantQuery(userMessage) {
+  // Keyword-based tenant matching
+  const tenantKeywords = {
+    kassangas: ["guitar", "keyboard", "music", "instrument", "audio", "drum", "amplifier", "cable"],
+  };
+
+  const lowerMessage = userMessage.toLowerCase();
+  
+  for (const [tenantName, keywords] of Object.entries(tenantKeywords)) {
+    if (keywords.some(kw => lowerMessage.includes(kw))) {
+      return tenantName;
+    }
+  }
+  return null;
+}
+
+async function recommendTenant(requirement) {
+  const tenants = await getActiveTenants();
+  const matchedTenantName = matchTenantQuery(requirement);
+  
+  if (matchedTenantName) {
+    const matched = tenants.find(t => t.client_name.toLowerCase().includes(matchedTenantName));
+    if (matched) {
+      return {
+        suggestion: `Try ${matched.client_name}`,
+        phone: matched.client_phone,
+        description: matched.description,
+        action: `Text them on ${matched.client_phone}`
+      };
+    }
+  }
+  return null;
+}
+
+async function registerNewTenant(clientName, clientPhone, pocName, pocPhone, description) {
+  try {
+    // Create a brand for the tenant
+    const { data: brandData, error: brandErr } = await supabase
+      .from("brands")
+      .insert([
+        {
+          name: clientName,
+          description: description,
+          is_platform_owner: false,
+          tagline: description,
+        }
+      ])
+      .select("id")
+      .single();
+    
+    if (brandErr) {
+      log(`Brand creation error: ${brandErr.message}`, "ERROR");
+      return null;
+    }
+
+    // Create tenant in bot_tenants
+    const { data: tenantData, error: tenantErr } = await supabase.rpc("create_tenant", {
+      p_client_name: clientName,
+      p_client_phone: clientPhone,
+      p_poc_name: pocName,
+      p_poc_phone: pocPhone,
+      p_description: description,
+      p_brand_id: brandData.id
+    });
+
+    if (tenantErr) {
+      log(`Tenant creation error: ${tenantErr.message}`, "ERROR");
+      return null;
+    }
+
+    log(`✅ New tenant registered: ${clientName} (${clientPhone})`, "SYSTEM");
+    return tenantData?.[0] || null;
+  } catch (err) {
+    log(`Exception in registerNewTenant: ${err.message}`, "ERROR");
+    return null;
+  }
+}
+
 async function generateReply(userMessage, tenant = null, templates = null, trainingData = [], contextMessages = [], catalogMatches = [], dbContext = "") {
+  // ===== ALPHADOME ROUTING LOGIC (Platform-aware) =====
+  // If this is Alphadome (no tenant), handle tenant recommendations
+  if (!tenant) {
+    const lowerMessage = userMessage.toLowerCase();
+    
+    // Check if user wants to activate a business bot
+    if (
+      lowerMessage.includes("activate") ||
+      lowerMessage.includes("grow") ||
+      lowerMessage.includes("business") ||
+      lowerMessage.includes("my bot") ||
+      lowerMessage.includes("tenant") ||
+      lowerMessage.includes("join alphadome")
+    ) {
+      log("Alphadome: Detected activation request", "SYSTEM");
+      return {
+        type: "text",
+        text: `Great! You've reached Alphadome—the AI ecosystem for African brands.\n\nI can help you activate a dedicated bot for your business in 2 minutes.\n\n🎯 What's your business name?`,
+        meta: { llm_used: false, reason: "activation_flow" },
+      };
+    }
+    
+    // Check if user is looking for a specific service/product
+    const tenantRecommendation = await recommendTenant(userMessage);
+    if (tenantRecommendation) {
+      log(`Alphadome: Recommending ${tenantRecommendation.suggestion}`, "SYSTEM");
+      return {
+        type: "text",
+        text: `I'm Alphadome, the AI platform. I don't ${tenantRecommendation.description.toLowerCase()} directly, but I know who does! 🎯\n\n✅ ${tenantRecommendation.suggestion}\n\nText them on: ${tenantRecommendation.phone}\n\nTell them Alphadome sent you!`,
+        meta: { llm_used: false, reason: "tenant_recommendation" },
+      };
+    }
+  }
+
+  // ===== STANDARD LLM REPLY GENERATION =====
   const creds = getDecryptedCredentials(tenant);
   const openaiClient = new OpenAI({ apiKey: creds.aiApiKey });
   const systemMessage = {
