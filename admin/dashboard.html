@@ -209,6 +209,55 @@
       <h1>Admin Dashboard</h1>
       <div class="user"><i class="fa-solid fa-user-shield"></i> Admin</div>
     </div>
+    <div class="card" style="background:linear-gradient(90deg,#232a4d 0%,#1e2747 100%);margin-bottom:32px;box-shadow:0 2px 16px 0 rgba(30,39,71,0.13);">
+      <h2 style="margin-top:0;color:#38bdf8;display:flex;align-items:center;gap:10px;"><i class="fa-solid fa-rocket"></i> Tenant Onboarding: Join Alphadome</h2>
+      <ol style="margin:0 0 18px 18px;padding:0;font-size:1.08rem;line-height:1.7;color:#e6e8ee;">
+        <li><b>Business Details:</b> Name, phone, email, business description</li>
+        <li><b>Brand Profile:</b> Brand name, tagline, logo/image, website, social links</li>
+        <li><b>Point of Contact:</b> Name, phone, email</li>
+        <li><b>Catalog Upload:</b> Products/services, images, categories, tags</li>
+        <li><b>Compliance & Verification:</b> (if required) KYC, business registration, etc.</li>
+        <li><b>Review & Activate:</b> Confirm details, accept terms, activate tenant bot</li>
+      </ol>
+      <div style="margin-bottom:10px;color:#b7bfd4;">All steps must be completed for a tenant to go live on Alphadome. Use the forms below or the WhatsApp onboarding flow.</div>
+      <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start;">
+        <div style="flex:1;min-width:260px;">
+          <label>Business Name</label>
+          <input id="onboard_business_name" placeholder="e.g. Kassangas Music Shop" required />
+          <label>Business Phone</label>
+          <input id="onboard_business_phone" placeholder="e.g. 0702245555" required />
+          <label>Business Email</label>
+          <input id="onboard_business_email" placeholder="e.g. info@kassangas.com" />
+          <label>Business Description</label>
+          <textarea id="onboard_business_desc" rows="2" placeholder="Short description of the business"></textarea>
+        </div>
+        <div style="flex:1;min-width:260px;">
+          <label>Brand Name</label>
+          <input id="onboard_brand_name" placeholder="e.g. Kassangas" />
+          <label>Tagline</label>
+          <input id="onboard_brand_tagline" placeholder="e.g. Your Music, Our Passion" />
+          <label>Brand Logo/Image</label>
+          <input id="onboard_brand_logo" type="file" accept="image/*" />
+          <label>Website</label>
+          <input id="onboard_brand_website" placeholder="https://kassangas.com" />
+          <label>Social Links</label>
+          <input id="onboard_brand_social" placeholder="Instagram, Facebook, etc." />
+        </div>
+        <div style="flex:1;min-width:260px;">
+          <label>Point of Contact Name</label>
+          <input id="onboard_poc_name" placeholder="e.g. John Doe" />
+          <label>Point of Contact Phone</label>
+          <input id="onboard_poc_phone" placeholder="e.g. 0701234567" />
+          <label>Point of Contact Email</label>
+          <input id="onboard_poc_email" placeholder="e.g. john@kassangas.com" />
+        </div>
+      </div>
+      <div style="margin-top:18px;">
+        <button id="onboard_submit" style="min-width:180px;"><i class="fa-solid fa-user-plus"></i> Submit Onboarding</button>
+        <span id="onboard_status" class="muted" style="margin-left:18px;"></span>
+      </div>
+      <div class="muted" style="margin-top:10px;">Need help? <a href="mailto:support@alphadome.com" style="color:#a5eaff;">Contact support</a> or see the <a href="#faq" style="color:#a5eaff;">FAQ below</a>.</div>
+    </div>
     <div class="webhook-info">
       <strong><i class="fa-solid fa-bolt"></i> Catalog Webhook:</strong> Real-time catalog sync is enabled.<br>
       POST updates to <code>/webhook/catalog</code> (see <a href="/admin/catalog_webhook.js" style="color:#a5eaff;">catalog_webhook.js</a> for integration).<br>
@@ -216,7 +265,7 @@
     </div>
     <div class="card">
       <h2 style="margin-top:0; color:#38bdf8;">Tenant Catalog Upload</h2>
-      <p style="color:#b7bfd4;">Upload products and images for a tenant. Images should be named by SKU (e.g., KASS-GTR-001.jpg).</p>
+      <p style="color:#b7bfd4;">Step 4: Upload products and images for a tenant. Images should be named by SKU (e.g., KASS-GTR-001.jpg).</p>
       <form id="uploadForm">
         <div class="row">
           <div>
@@ -251,6 +300,7 @@
     </div>
     <div class="card">
       <h2 style="margin-top:0; color:#38bdf8;">Simple Upload (No SKU/CSV)</h2>
+      <div class="muted">Step 4 (alternative): Use this for quick product uploads without a full catalog.</div>
       <form id="simpleForm">
         <div class="row">
           <div>
@@ -301,6 +351,7 @@
     </div>
     <div class="card">
       <h2 style="margin-top:0; color:#38bdf8;">CSV Import</h2>
+      <div class="muted">Step 4 (alternative): Import a full catalog from CSV.</div>
       <form id="csvForm">
         <div class="row">
           <div>
@@ -326,6 +377,57 @@
     </div>
   </div>
   <script>
+        // Onboarding wizard logic
+        document.getElementById('onboard_submit').onclick = async function(e) {
+          e.preventDefault();
+          const status = document.getElementById('onboard_status');
+          status.textContent = 'Submitting...';
+          // Collect all onboarding fields
+          const business = {
+            name: document.getElementById('onboard_business_name').value,
+            phone: document.getElementById('onboard_business_phone').value,
+            email: document.getElementById('onboard_business_email').value,
+            description: document.getElementById('onboard_business_desc').value
+          };
+          const brand = {
+            name: document.getElementById('onboard_brand_name').value,
+            tagline: document.getElementById('onboard_brand_tagline').value,
+            website: document.getElementById('onboard_brand_website').value,
+            social: document.getElementById('onboard_brand_social').value
+          };
+          const poc = {
+            name: document.getElementById('onboard_poc_name').value,
+            phone: document.getElementById('onboard_poc_phone').value,
+            email: document.getElementById('onboard_poc_email').value
+          };
+          const logoFile = document.getElementById('onboard_brand_logo').files[0];
+          // Basic validation
+          if (!business.name || !business.phone) {
+            status.textContent = 'Business name and phone are required.';
+            return;
+          }
+          // Prepare form data
+          const formData = new FormData();
+          formData.append('business', JSON.stringify(business));
+          formData.append('brand', JSON.stringify(brand));
+          formData.append('poc', JSON.stringify(poc));
+          if (logoFile) formData.append('logo', logoFile);
+          // Submit to a new onboarding endpoint (to be handled in backend)
+          try {
+            const res = await fetch('/admin/tenant/onboard', {
+              method: 'POST',
+              body: formData
+            });
+            const data = await res.json();
+            if (data && data.ok) {
+              status.textContent = 'Onboarding submitted! Our team will review and activate your tenant.';
+            } else {
+              status.textContent = data.error || 'Submission failed.';
+            }
+          } catch (err) {
+            status.textContent = 'Network or server error.';
+          }
+        };
     // ...existing code for form handling...
     const form = document.getElementById('uploadForm');
     const responseEl = document.getElementById('response');
