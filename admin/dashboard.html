@@ -122,18 +122,41 @@
     mobileSidebar.querySelectorAll('.nav-link').forEach(link => {
       link.addEventListener('click', closeMobileSidebar);
     });
-    // SPA navigation (desktop and mobile)
-    function setupNavLinks(scope) {
-      scope.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', function(e) {
-          e.preventDefault();
-          document.querySelectorAll('.sidebar .nav-link').forEach(l => l.classList.remove('active'));
-          this.classList.add('active');
-          loadPage(this.getAttribute('href'));
-        });
+    // SPA navigation (desktop and mobile) - event delegation for robust handling
+    function setActiveNav(hash) {
+      document.querySelectorAll('.sidebar .nav-link').forEach(l => {
+        if (l.getAttribute('href') === hash) l.classList.add('active');
+        else l.classList.remove('active');
       });
     }
-    setupNavLinks(document);
+    function handleNavClick(e) {
+      const link = e.target.closest('.nav-link');
+      if (link) {
+        e.preventDefault();
+        const hash = link.getAttribute('href');
+        if (window.location.hash !== hash) {
+          window.location.hash = hash;
+        } else {
+          // If already on this hash, force reload
+          loadPage(hash);
+        }
+        setActiveNav(hash);
+        // Close mobile sidebar if open
+        closeMobileSidebar();
+      }
+    }
+    // Attach event listeners to both sidebars
+    document.getElementById('sidebarNav').addEventListener('click', handleNavClick);
+    document.getElementById('mobileSidebar').addEventListener('click', handleNavClick);
+    // On hashchange, update content and active nav
+    function handleHashChange() {
+      const hash = window.location.hash || '#dashboard';
+      setActiveNav(hash);
+      loadPage(hash);
+    }
+    window.addEventListener('hashchange', handleHashChange);
+    // Initial load
+    handleHashChange();
     // SPA page loader
     async function loadPage(hash) {
       const spaContent = document.getElementById('spa-content');
