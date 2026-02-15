@@ -64,26 +64,90 @@
             <h3><i class="fa-solid fa-users"></i> Tenants</h3>
             <div class="value" id="tenantCount">--</div>
             <div class="desc">Active tenants</div>
+            <a href="#tenant-management" class="btn btn-sm btn-outline-info mt-2">Manage Tenants</a>
           </div>
           <div class="dashboard-card">
             <h3><i class="fa-solid fa-robot"></i> LLM Usage</h3>
             <div class="value" id="llmUsage">--</div>
             <div class="desc">LLM requests (24h)</div>
+            <a href="#llm-analytics" class="btn btn-sm btn-outline-info mt-2">View Analytics</a>
           </div>
           <div class="dashboard-card">
             <h3><i class="fa-solid fa-bug"></i> Errors</h3>
             <div class="value" id="errorCount">--</div>
             <div class="desc">Errors (24h)</div>
+            <a href="#error-monitoring" class="btn btn-sm btn-outline-danger mt-2">Error Logs</a>
           </div>
           <div class="dashboard-card">
             <h3><i class="fa-solid fa-heart-pulse"></i> Health</h3>
             <div class="value" id="healthStatus">--</div>
             <div class="desc">System health</div>
+            <a href="#system-health" class="btn btn-sm btn-outline-success mt-2">Health Details</a>
+          </div>
+          <div class="dashboard-card">
+            <h3><i class="fa-solid fa-chart-line"></i> Analytics</h3>
+            <div class="value">--</div>
+            <div class="desc">Platform analytics</div>
+            <span class="badge bg-secondary">Coming Soon</span>
+          </div>
+          <div class="dashboard-card">
+            <h3><i class="fa-solid fa-user-gear"></i> User Management</h3>
+            <div class="value">--</div>
+            <div class="desc">Admin & user roles</div>
+            <span class="badge bg-secondary">Coming Soon</span>
+          </div>
+          <div class="dashboard-card">
+            <h3><i class="fa-solid fa-bell"></i> Notifications</h3>
+            <div class="value">--</div>
+            <div class="desc">Alerts & messages</div>
+            <span class="badge bg-secondary">Coming Soon</span>
+          </div>
+          <div class="dashboard-card">
+            <h3><i class="fa-solid fa-shield-halved"></i> Audit Logs</h3>
+            <div class="value">--</div>
+            <div class="desc">Admin actions</div>
+            <span class="badge bg-secondary">Coming Soon</span>
           </div>
         </div>
-        <div class="mt-5">
-          <h2>Welcome to the Alphadome Admin Portal</h2>
-          <p class="text-muted">Use the sidebar to manage tenants, upload catalogs, view logs, and monitor LLM usage. All features are optimized for desktop and mobile.</p>
+        <div class="row mt-5 g-4">
+          <div class="col-12 col-lg-8">
+            <div class="card p-4 mb-4">
+              <h2 class="mb-3"><i class="fa-solid fa-gauge-high"></i> Super Admin Dashboard</h2>
+              <p class="text-muted mb-2">Welcome to the Alphadome Super Admin Portal. Here you can manage tenants, monitor LLM usage, review logs, and oversee the health and security of the entire platform.</p>
+              <ul class="list-group list-group-flush mb-2">
+                <li class="list-group-item bg-transparent text-light"><i class="fa-solid fa-users"></i> <b>Tenant Management:</b> Add, edit, suspend, or remove tenants. <a href="#tenant-management">Go to Tenant Management</a></li>
+                <li class="list-group-item bg-transparent text-light"><i class="fa-solid fa-robot"></i> <b>LLM Usage:</b> Track and analyze LLM requests and costs. <a href="#llm-analytics">View LLM Analytics</a></li>
+                <li class="list-group-item bg-transparent text-light"><i class="fa-solid fa-bug"></i> <b>Error Monitoring:</b> View and resolve system errors. <a href="#error-monitoring">Go to Error Logs</a></li>
+                <li class="list-group-item bg-transparent text-light"><i class="fa-solid fa-table-list"></i> <b>Catalog Management:</b> Upload, review, and manage product catalogs. <a href="#catalog">Catalog Viewer</a></li>
+                <li class="list-group-item bg-transparent text-light"><i class="fa-solid fa-wave-square"></i> <b>Live Logs:</b> Stream and search platform logs. <a href="#logs">Live Logs</a></li>
+                <li class="list-group-item bg-transparent text-light"><i class="fa-solid fa-user-gear"></i> <b>User Management:</b> Manage admin and user roles. <span class="badge bg-secondary">Coming Soon</span></li>
+                <li class="list-group-item bg-transparent text-light"><i class="fa-solid fa-bell"></i> <b>Notifications:</b> Set up alerts and notifications. <span class="badge bg-secondary">Coming Soon</span></li>
+                <li class="list-group-item bg-transparent text-light"><i class="fa-solid fa-shield-halved"></i> <b>Audit Logs:</b> Track admin actions and changes. <span class="badge bg-secondary">Coming Soon</span></li>
+                <li class="list-group-item bg-transparent text-light"><i class="fa-solid fa-chart-line"></i> <b>Analytics:</b> Visualize platform performance. <span class="badge bg-secondary">Coming Soon</span></li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-12 col-lg-4">
+            <div class="card p-4 mb-4 bg-dark border-info">
+              <h4 class="mb-2"><i class="fa-solid fa-circle-info"></i> Quick Actions</h4>
+              <ul class="list-unstyled mb-0">
+                <li><a href="#tenant-management" class="btn btn-outline-info btn-sm w-100 mb-2"><i class="fa-solid fa-user-plus"></i> Add Tenant</a></li>
+                <li><a href="#catalog" class="btn btn-outline-info btn-sm w-100 mb-2"><i class="fa-solid fa-upload"></i> Upload Catalog</a></li>
+                <li><a href="#logs" class="btn btn-outline-info btn-sm w-100 mb-2"><i class="fa-solid fa-wave-square"></i> View Live Logs</a></li>
+                <li><a href="#llm-analytics" class="btn btn-outline-info btn-sm w-100 mb-2"><i class="fa-solid fa-robot"></i> LLM Analytics</a></li>
+                <li><a href="#error-monitoring" class="btn btn-outline-danger btn-sm w-100 mb-2"><i class="fa-solid fa-bug"></i> Error Logs</a></li>
+              </ul>
+            </div>
+            <div class="card p-4 bg-dark border-secondary">
+              <h4 class="mb-2"><i class="fa-solid fa-lightbulb"></i> Tips</h4>
+              <ul class="mb-0">
+                <li>Use the sidebar or quick actions to navigate.</li>
+                <li>Monitor LLM usage to control costs.</li>
+                <li>Check error logs regularly for system health.</li>
+                <li>Invite more admins (coming soon).</li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </main>
