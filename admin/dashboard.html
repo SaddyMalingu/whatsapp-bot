@@ -1,5 +1,5 @@
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -7,297 +7,224 @@
   <title>Alphadome Admin Portal</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
   <style>
-    body {
-      font-family: 'Inter', system-ui, Arial, sans-serif;
-      margin: 0;
-      background: linear-gradient(120deg, #181c2f 0%, #232a4d 100%);
-      color: #e6e8ee;
-      min-height: 100vh;
-      display: flex;
+    body { font-family: 'Inter', system-ui, Arial, sans-serif; background: linear-gradient(120deg, #181c2f 0%, #232a4d 100%); color: #e6e8ee; min-height: 100vh; }
+    .sidebar { background: #15182b; min-height: 100vh; border-right: 1px solid #232a4d; transition: width 0.2s, left 0.2s; box-shadow: 2px 0 12px 0 rgba(30,39,71,0.08); }
+    .sidebar .logo { font-size: 2rem; font-weight: 700; color: #a5eaff; margin: 32px 0 32px 0; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
+    .sidebar .nav-link { color: #b7bfd4; font-weight: 600; font-size: 1.08rem; border-left: 4px solid transparent; transition: all 0.2s; border-radius: 0 8px 8px 0; margin: 2px 0; }
+    .sidebar .nav-link.active, .sidebar .nav-link:hover { color: #fff; background: #232a4d; border-left: 4px solid #4f46e5; box-shadow: 0 2px 8px 0 rgba(79,70,229,0.10); }
+    .topbar { background: #232a4d; color: #a5eaff; padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px 0 rgba(30,39,71,0.08); }
+    .topbar .user { font-size: 1.1rem; color: #b7bfd4; display: flex; align-items: center; gap: 10px; }
+    .dashboard-cards { display: flex; flex-wrap: wrap; gap: 24px; margin-top: 32px; justify-content: flex-start; }
+    .dashboard-card { background: #181c2f; border-radius: 18px; border: 1px solid #232a4d; box-shadow: 0 2px 16px 0 rgba(30,39,71,0.10); padding: 32px 24px 28px 24px; flex: 1 1 220px; min-width: 180px; max-width: 340px; transition: box-shadow 0.2s, transform 0.2s; margin-bottom: 8px; }
+    .dashboard-card:hover { box-shadow: 0 4px 32px 0 rgba(30,39,71,0.18); transform: translateY(-2px) scale(1.03); }
+    .dashboard-card h3 { color: #38bdf8; font-size: 1.18rem; margin-bottom: 12px; letter-spacing: 0.5px; }
+    .dashboard-card .value { font-size: 2.3rem; font-weight: 700; color: #a5eaff; margin-bottom: 4px; }
+    .dashboard-card .desc { color: #b7bfd4; font-size: 1.04rem; margin-bottom: 0; }
+    .main-content { margin-left: 0; padding: 32px 5vw 32px 5vw; max-width: 1200px; width: 100%; transition: margin-left 0.2s; }
+    @media (min-width: 1200px) { .main-content { max-width: 1400px; } }
+    @media (min-width: 992px) { .main-content { margin-left: 260px; } .sidebar { width: 260px; position: fixed; left: 0; top: 0; z-index: 10; } }
+    @media (max-width: 991px) {
+      .sidebar { width: 100vw; position: fixed; left: 0; top: 0; z-index: 20; height: 60px; flex-direction: row; align-items: center; justify-content: space-between; padding: 0 16px; box-shadow: none; }
+      .sidebar .logo { margin: 0; font-size: 1.3rem; }
+      .sidebar .nav { flex-direction: row; gap: 8px; }
+      .main-content { margin-left: 0; padding: 24px 2vw 24px 2vw; }
+      .dashboard-cards { gap: 12px; }
+      .dashboard-card { min-width: 140px; max-width: 100vw; padding: 20px 10px 16px 10px; }
     }
-    .sidebar {
-      width: 240px;
-      background: #15182b;
-      border-right: 1px solid #232a4d;
-      padding: 32px 0 0 0;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      position: fixed;
-      left: 0;
-      top: 0;
-      z-index: 10;
-    }
-    .sidebar .logo {
-      font-size: 2rem;
-      font-weight: 700;
-      color: #a5eaff;
-      margin-bottom: 32px;
-      letter-spacing: 1px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .sidebar nav {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
-    .sidebar nav a {
-      color: #b7bfd4;
-      text-decoration: none;
-      font-weight: 600;
-      padding: 12px 32px;
-      border-left: 4px solid transparent;
-      transition: all 0.2s;
-      font-size: 1.08rem;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .sidebar nav a.active, .sidebar nav a:hover {
-      color: #fff;
-      background: #232a4d;
-      border-left: 4px solid #4f46e5;
-    }
-    .main {
-      margin-left: 240px;
-      padding: 40px 5vw 40px 5vw;
-      width: 100%;
-      max-width: 1200px;
-    }
-    .header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 32px;
-    }
-    .header h1 {
-      font-size: 2.1rem;
-      font-weight: 700;
-      margin: 0;
-      color: #a5eaff;
-      letter-spacing: 1px;
-    }
-    .header .user {
-      font-size: 1.1rem;
-      color: #b7bfd4;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .card {
-      background: #181c2f;
-      padding: 32px 28px 28px 28px;
-      border-radius: 16px;
-      border: 1px solid #232a4d;
-      margin-bottom: 32px;
-      box-shadow: 0 2px 16px 0 rgba(30,39,71,0.10);
-      max-width: 900px;
-      width: 100%;
-      transition: box-shadow 0.2s;
-    }
-    .card:hover {
-      box-shadow: 0 4px 32px 0 rgba(30,39,71,0.18);
-    }
-    label {
-      display: block;
-      margin-top: 18px;
-      font-weight: 600;
-      color: #a5eaff;
-      letter-spacing: 0.5px;
-    }
-    input, textarea, select {
-      width: 100%;
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid #263056;
-      background: #10162a;
-      color: #fff;
-      margin-top: 6px;
-      font-size: 1rem;
-      transition: border 0.2s;
-    }
-    input:focus, textarea:focus, select:focus {
-      border: 1.5px solid #4f46e5;
-      outline: none;
-    }
-    input[type="file"] {
-      padding: 8px;
-      background: #10162a;
-      color: #a5eaff;
-    }
-    button {
-      margin-top: 24px;
-      padding: 12px 22px;
-      border-radius: 8px;
-      border: 0;
-      background: linear-gradient(90deg, #4f46e5 0%, #38bdf8 100%);
-      color: #fff;
-      font-weight: 700;
-      font-size: 1.08rem;
-      cursor: pointer;
-      box-shadow: 0 2px 8px 0 rgba(79,70,229,0.10);
-      transition: background 0.2s, box-shadow 0.2s;
-    }
-    button:hover {
-      background: linear-gradient(90deg, #38bdf8 0%, #4f46e5 100%);
-      box-shadow: 0 4px 16px 0 rgba(79,70,229,0.18);
-    }
-    .row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
-    }
-    .muted {
-      font-size: 13px;
-      color: #9aa5c0;
-      margin-top: 4px;
-    }
-    pre {
-      background: #10162a;
-      padding: 16px;
-      border-radius: 10px;
-      border: 1px solid #232a4d;
-      overflow: auto;
-      color: #a5eaff;
-      font-size: 1rem;
-      margin-top: 0;
-    }
-    .webhook-info {
-      background: linear-gradient(90deg, #232a4d 0%, #1e2747 100%);
-      color: #e6e8ee;
-      border-radius: 10px;
-      padding: 18px;
-      margin-bottom: 28px;
-      border: 1px solid #263056;
-      font-size: 1.08rem;
-      box-shadow: 0 2px 8px 0 rgba(30,39,71,0.08);
-    }
-    .webhook-info code {
-      background: #0f1428;
-      color: #a5eaff;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 1rem;
-    }
-    @media (max-width: 900px) {
-      .main { padding: 32px 2vw 32px 2vw; }
-      .card { padding: 20px 8px 18px 8px; }
-      .sidebar { width: 60px; padding: 18px 0 0 0; }
-      .sidebar .logo { font-size: 1.2rem; }
-      .sidebar nav a { font-size: 0.95rem; padding: 10px 10px; }
-      .main { margin-left: 60px; }
-    }
+    .nav-link[aria-current="page"] { color: #fff !important; background: #232a4d !important; border-left: 4px solid #4f46e5 !important; }
+    /* Extra polish for mobile sidebar overlay */
+    #sidebarOverlay { transition: background 0.2s; }
   </style>
 </head>
 <body>
-  <div class="sidebar">
-    <div class="logo"><i class="fa-solid fa-cube"></i> Alphadome</div>
-    <nav>
-      <a href="/admin" class="active"><i class="fa-solid fa-upload"></i> Upload</a>
-      <a href="/admin/simple"><i class="fa-solid fa-plus"></i> Simple Upload</a>
-      <a href="/admin/catalog"><i class="fa-solid fa-table-list"></i> Catalog Viewer</a>
-      <a href="/logs/live"><i class="fa-solid fa-wave-square"></i> Live Logs</a>
+  <div class="topbar d-flex align-items-center justify-content-between">
+    <div class="d-flex align-items-center gap-2">
+      <button class="btn btn-link text-light d-lg-none" id="sidebarToggle" aria-label="Toggle menu"><i class="fa fa-bars"></i></button>
+      <span class="logo"><i class="fa-solid fa-cube"></i> Alphadome</span>
+    </div>
+    <div class="user"><i class="fa-solid fa-user-shield"></i> Admin</div>
+  </div>
+  <div class="d-flex">
+    <nav class="sidebar flex-column p-0 d-lg-flex d-none" id="sidebarNav">
+      <div class="logo d-none d-lg-flex"><i class="fa-solid fa-cube"></i> Alphadome</div>
+      <ul class="nav flex-column w-100">
+        <li class="nav-item"><a class="nav-link active" href="#dashboard"><i class="fa-solid fa-gauge"></i> Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link" href="#upload"><i class="fa-solid fa-upload"></i> Upload</a></li>
+        <li class="nav-item"><a class="nav-link" href="#simple"><i class="fa-solid fa-plus"></i> Simple Upload</a></li>
+        <li class="nav-item"><a class="nav-link" href="#catalog"><i class="fa-solid fa-table-list"></i> Catalog Viewer</a></li>
+        <li class="nav-item"><a class="nav-link" href="#logs"><i class="fa-solid fa-wave-square"></i> Live Logs</a></li>
+      </ul>
+    </nav>
+    <main class="main-content flex-grow-1">
+      <div id="spa-content">
+        <div class="dashboard-cards">
+          <div class="dashboard-card">
+            <h3><i class="fa-solid fa-users"></i> Tenants</h3>
+            <div class="value" id="tenantCount">--</div>
+            <div class="desc">Active tenants</div>
+          </div>
+          <div class="dashboard-card">
+            <h3><i class="fa-solid fa-robot"></i> LLM Usage</h3>
+            <div class="value" id="llmUsage">--</div>
+            <div class="desc">LLM requests (24h)</div>
+          </div>
+          <div class="dashboard-card">
+            <h3><i class="fa-solid fa-bug"></i> Errors</h3>
+            <div class="value" id="errorCount">--</div>
+            <div class="desc">Errors (24h)</div>
+          </div>
+          <div class="dashboard-card">
+            <h3><i class="fa-solid fa-heart-pulse"></i> Health</h3>
+            <div class="value" id="healthStatus">--</div>
+            <div class="desc">System health</div>
+          </div>
+        </div>
+        <div class="mt-5">
+          <h2>Welcome to the Alphadome Admin Portal</h2>
+          <p class="text-muted">Use the sidebar to manage tenants, upload catalogs, view logs, and monitor LLM usage. All features are optimized for desktop and mobile.</p>
+        </div>
+      </div>
+    </main>
+    <!-- Mobile sidebar overlay -->
+    <div id="sidebarOverlay" class="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-lg-none d-none" style="z-index:1050;"></div>
+    <nav class="sidebar flex-column p-0 d-lg-none d-none position-fixed top-0 start-0 w-75 h-100" id="mobileSidebar" style="z-index:1100;">
+      <div class="logo"><i class="fa-solid fa-cube"></i> Alphadome</div>
+      <ul class="nav flex-column w-100">
+        <li class="nav-item"><a class="nav-link active" href="#dashboard"><i class="fa-solid fa-gauge"></i> Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link" href="#upload"><i class="fa-solid fa-upload"></i> Upload</a></li>
+        <li class="nav-item"><a class="nav-link" href="#simple"><i class="fa-solid fa-plus"></i> Simple Upload</a></li>
+        <li class="nav-item"><a class="nav-link" href="#catalog"><i class="fa-solid fa-table-list"></i> Catalog Viewer</a></li>
+        <li class="nav-item"><a class="nav-link" href="#logs"><i class="fa-solid fa-wave-square"></i> Live Logs</a></li>
+      </ul>
     </nav>
   </div>
-  <div class="main">
-    <div class="header">
-      <h1>Admin Dashboard</h1>
-      <div class="user"><i class="fa-solid fa-user-shield"></i> Admin</div>
-    </div>
-    <div class="card" style="background:linear-gradient(90deg,#232a4d 0%,#1e2747 100%);margin-bottom:32px;box-shadow:0 2px 16px 0 rgba(30,39,71,0.13);">
-      <h2 style="margin-top:0;color:#38bdf8;display:flex;align-items:center;gap:10px;"><i class="fa-solid fa-rocket"></i> Tenant Onboarding: Join Alphadome</h2>
-      <ol style="margin:0 0 18px 18px;padding:0;font-size:1.08rem;line-height:1.7;color:#e6e8ee;">
-        <li><b>Business Details:</b> Name, phone, email, business description</li>
-        <li><b>Brand Profile:</b> Brand name, tagline, logo/image, website, social links</li>
-        <li><b>Point of Contact:</b> Name, phone, email</li>
-        <li><b>Catalog Upload:</b> Products/services, images, categories, tags</li>
-        <li><b>Compliance & Verification:</b> (if required) KYC, business registration, etc.</li>
-        <li><b>Review & Activate:</b> Confirm details, accept terms, activate tenant bot</li>
-      </ol>
-      <div style="margin-bottom:10px;color:#b7bfd4;">All steps must be completed for a tenant to go live on Alphadome. Use the forms below or the WhatsApp onboarding flow.</div>
-      <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start;">
-        <div style="flex:1;min-width:260px;">
-          <label>Business Name</label>
-          <input id="onboard_business_name" placeholder="e.g. Kassangas Music Shop" required />
-          <label>Business Phone</label>
-          <input id="onboard_business_phone" placeholder="e.g. 0702245555" required />
-          <label>Business Email</label>
-          <input id="onboard_business_email" placeholder="e.g. info@kassangas.com" />
-          <label>Business Description</label>
-          <textarea id="onboard_business_desc" rows="2" placeholder="Short description of the business"></textarea>
-        </div>
-        <div style="flex:1;min-width:260px;">
-          <label>Brand Name</label>
-          <input id="onboard_brand_name" placeholder="e.g. Kassangas" />
-          <label>Tagline</label>
-          <input id="onboard_brand_tagline" placeholder="e.g. Your Music, Our Passion" />
-          <label>Brand Logo/Image</label>
-          <input id="onboard_brand_logo" type="file" accept="image/*" />
-          <label>Website</label>
-          <input id="onboard_brand_website" placeholder="https://kassangas.com" />
-          <label>Social Links</label>
-          <input id="onboard_brand_social" placeholder="Instagram, Facebook, etc." />
-        </div>
-        <div style="flex:1;min-width:260px;">
-          <label>Point of Contact Name</label>
-          <input id="onboard_poc_name" placeholder="e.g. John Doe" />
-          <label>Point of Contact Phone</label>
-          <input id="onboard_poc_phone" placeholder="e.g. 0701234567" />
-          <label>Point of Contact Email</label>
-          <input id="onboard_poc_email" placeholder="e.g. john@kassangas.com" />
-        </div>
-      </div>
-      <div style="margin-top:18px;">
-        <button id="onboard_submit" style="min-width:180px;"><i class="fa-solid fa-user-plus"></i> Submit Onboarding</button>
-        <span id="onboard_status" class="muted" style="margin-left:18px;"></span>
-      </div>
-      <div class="muted" style="margin-top:10px;">Need help? <a href="mailto:support@alphadome.com" style="color:#a5eaff;">Contact support</a> or see the <a href="#faq" style="color:#a5eaff;">FAQ below</a>.</div>
-    </div>
-    <div class="webhook-info">
-      <strong><i class="fa-solid fa-bolt"></i> Catalog Webhook:</strong> Real-time catalog sync is enabled.<br>
-      POST updates to <code>/webhook/catalog</code> (see <a href="/admin/catalog_webhook.js" style="color:#a5eaff;">catalog_webhook.js</a> for integration).<br>
-      <span class="muted">Use this endpoint to push catalog changes from external systems for instant accuracy.</span>
-    </div>
-    <div class="card">
-      <h2 style="margin-top:0; color:#38bdf8;">Tenant Catalog Upload</h2>
-      <p style="color:#b7bfd4;">Step 4: Upload products and images for a tenant. Images should be named by SKU (e.g., KASS-GTR-001.jpg).</p>
-      <form id="uploadForm">
-        <div class="row">
-          <div>
-            <label>Admin Key</label>
-            <input name="admin_key" placeholder="ADMIN_PASS" required />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Responsive sidebar toggle for mobile
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    const mobileSidebar = document.getElementById('mobileSidebar');
+    function openMobileSidebar() {
+      mobileSidebar.classList.remove('d-none');
+      sidebarOverlay.classList.remove('d-none');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeMobileSidebar() {
+      mobileSidebar.classList.add('d-none');
+      sidebarOverlay.classList.add('d-none');
+      document.body.style.overflow = '';
+    }
+    sidebarToggle.addEventListener('click', openMobileSidebar);
+    sidebarOverlay.addEventListener('click', closeMobileSidebar);
+    // Close sidebar on nav click (mobile)
+    mobileSidebar.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', closeMobileSidebar);
+    });
+    // SPA navigation (desktop and mobile)
+    function setupNavLinks(scope) {
+      scope.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          document.querySelectorAll('.sidebar .nav-link').forEach(l => l.classList.remove('active'));
+          this.classList.add('active');
+          loadPage(this.getAttribute('href'));
+        });
+      });
+    }
+    setupNavLinks(document);
+    // SPA page loader
+    async function loadPage(hash) {
+      const spaContent = document.getElementById('spa-content');
+      spaContent.innerHTML = `<div class='text-center p-5'><div class='spinner-border text-info'></div><div>Loading...</div></div>`;
+      let url = '';
+      if (hash === '#catalog') url = 'catalog.html';
+      else if (hash === '#simple') url = 'simple_upload.html';
+      else if (hash === '#upload') url = 'dashboard.html#upload';
+      else if (hash === '#logs') url = '/logs/live';
+      else if (hash === '#dashboard' || hash === '' || hash === '#') url = '';
+      else url = '';
+      if (url.endsWith('.html')) {
+        try {
+          const resp = await fetch(url);
+          if (!resp.ok) throw new Error('Not found');
+          let html = await resp.text();
+          // Extract <body> content only
+          html = html.match(/<body[^>]*>([\s\S]*?)<\/body>/i)?.[1] || html;
+          spaContent.innerHTML = html;
+        } catch (e) {
+          spaContent.innerHTML = `<div class='text-center p-5 text-danger'><h2>Failed to load page.</h2><div class='mt-2'>Please check the link or contact support.</div></div>`;
+        }
+      } else if (hash === '#dashboard' || hash === '' || hash === '#') {
+        // Default dashboard
+        spaContent.innerHTML = `
+        <div class="dashboard-cards">
+          <div class="dashboard-card">
+            <h3><i class="fa-solid fa-users"></i> Tenants</h3>
+            <div class="value" id="tenantCount">--</div>
+            <div class="desc">Active tenants</div>
           </div>
-          <div>
-            <label>Tenant Phone</label>
-            <input name="tenant_phone" placeholder="0702245555" />
+          <div class="dashboard-card">
+            <h3><i class="fa-solid fa-robot"></i> LLM Usage</h3>
+            <div class="value" id="llmUsage">--</div>
+            <div class="desc">LLM requests (24h)</div>
+          </div>
+          <div class="dashboard-card">
+            <h3><i class="fa-solid fa-bug"></i> Errors</h3>
+            <div class="value" id="errorCount">--</div>
+            <div class="desc">Errors (24h)</div>
+          </div>
+          <div class="dashboard-card">
+            <h3><i class="fa-solid fa-heart-pulse"></i> Health</h3>
+            <div class="value" id="healthStatus">--</div>
+            <div class="desc">System health</div>
           </div>
         </div>
-        <label>Tenant Name (optional)</label>
-        <input name="tenant_name" placeholder="Kassangas Music Shop" />
-        <label>Products JSON</label>
-        <textarea name="products_json" rows="8">[
-  {
-    "sku": "KASS-NEW-009",
-    "name": "Studio Headphones",
-    "description": "Closed-back monitoring headphones for studio work.",
-    "price": 8200,
-    "currency": "KES",
-    "stock_count": 6,
-    "image_url": null,
-    "metadata": {"category":"audio","tags":["headphones","studio"],"brand":"Kassangas"}
-  }
-]</textarea>
-        <label>Images (named by SKU)</label>
-        <input name="images" type="file" multiple />
-        <div class="muted">Example filenames: KASS-NEW-009.jpg, KASS-GTR-001.png</div>
-        <button type="submit"><i class="fa-solid fa-upload"></i> Upload</button>
-      </form>
-    </div>
+        <div class="mt-5">
+          <h2>Welcome to the Alphadome Admin Portal</h2>
+          <p class="text-muted">Use the sidebar to manage tenants, upload catalogs, view logs, and monitor LLM usage. All features are optimized for desktop and mobile.</p>
+        </div>
+        `;
+      } else if (hash === '#logs') {
+        // For logs, open in new tab for now
+        window.open('/logs/live', '_blank');
+        spaContent.innerHTML = `<div class='text-center p-5'><h2>Logs opened in new tab.</h2></div>`;
+      } else {
+        spaContent.innerHTML = `<div class='text-center p-5 text-danger'><h2>Page not found or broken link.</h2><div class='mt-2'>Please check the link or contact support.</div></div>`;
+      }
+    }
+    // Fetch dashboard stats via AJAX and update cards
+    async function updateDashboardCards() {
+      try {
+        // Example endpoints, replace with your actual API endpoints
+        const [tenants, llm, errors, health] = await Promise.all([
+          fetch('/admin/api/tenants/active').then(r => r.json()).catch(() => ({count: '--'})),
+          fetch('/admin/api/llm/usage').then(r => r.json()).catch(() => ({count: '--'})),
+          fetch('/admin/api/errors/count').then(r => r.json()).catch(() => ({count: '--'})),
+          fetch('/admin/api/health').then(r => r.json()).catch(() => ({status: '--'})),
+        ]);
+        document.getElementById('tenantCount')?.innerText = tenants.count ?? '--';
+        document.getElementById('llmUsage')?.innerText = llm.count ?? '--';
+        document.getElementById('errorCount')?.innerText = errors.count ?? '--';
+        document.getElementById('healthStatus')?.innerText = health.status ?? '--';
+      } catch (e) {
+        // fallback: do nothing
+      }
+    }
+    // Run on dashboard load
+    if (window.location.hash === '' || window.location.hash === '#' || window.location.hash === '#dashboard') {
+      updateDashboardCards();
+    }
+    // Also run when dashboard is loaded via SPA
+    window.addEventListener('hashchange', () => {
+      if (window.location.hash === '' || window.location.hash === '#' || window.location.hash === '#dashboard') {
+        setTimeout(updateDashboardCards, 200);
+      }
+    });
+  </script>
+</body>
+</html>
     <div class="card">
       <h2 style="margin-top:0; color:#38bdf8;">Simple Upload (No SKU/CSV)</h2>
       <div class="muted">Step 4 (alternative): Use this for quick product uploads without a full catalog.</div>
