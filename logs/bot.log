@@ -1,0 +1,945 @@
+[2025-10-16T15:55:14.287Z] [SYSTEM] Server running on port 3000
+[2025-10-16T15:59:07.593Z] [SYSTEM] Server running on port 3000
+[2025-10-16T16:02:00.103Z] [SYSTEM] Server running on port 3000
+[2025-10-16T16:12:00.115Z] [SYSTEM] ===== SELF-DIAGNOSTIC SUMMARY =====
+[2025-10-16T16:12:00.121Z] [SYSTEM] Total log entries: 3
+[2025-10-16T16:12:00.125Z] [ERROR] Errors found: 0
+[2025-10-16T16:12:00.130Z] [WARN] Warnings found: 0
+[2025-10-16T16:12:00.133Z] [AI] GPT-related issues: 0
+[2025-10-16T16:12:00.135Z] [OUTGOING] WhatsApp send issues: 0
+[2025-10-16T16:12:00.139Z] [SYSTEM] ✅ System health: stable
+[2025-10-16T16:18:39.144Z] [SYSTEM] Server running on port 3000
+[2025-10-16T16:23:33.684Z] [SYSTEM] Server running on port 3000
+[2025-10-16T16:49:07.906Z] [SYSTEM] Server running on port 3000
+[2025-10-16T16:58:32.574Z] [SYSTEM] Server running on port 3000
+[2025-10-17T03:56:06.748Z] [SYSTEM] Server running on port 3000
+[2025-10-17T04:28:09.379Z] [SYSTEM] Health monitor started.
+[2025-10-17T04:28:09.383Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-17T04:28:09.394Z] [SYSTEM] Server running on port 3000
+[2025-10-17T04:29:56.362Z] [SYSTEM] Health monitor started.
+[2025-10-17T04:29:56.367Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-17T04:29:56.379Z] [SYSTEM] Server running on port 3000
+[2025-10-17T04:49:17.978Z] [SYSTEM] Health monitor started.
+[2025-10-17T04:49:17.982Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-17T04:49:17.993Z] [SYSTEM] Server running on port 3000
+[2025-10-17T05:01:03.436Z] [SYSTEM] Health monitor started.
+[2025-10-17T05:01:03.442Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-17T05:01:03.456Z] [SYSTEM] Server running on port 3000
+[2025-10-17T05:02:35.918Z] [SYSTEM] Health monitor started.
+[2025-10-17T05:02:35.921Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-17T05:02:35.935Z] [SYSTEM] Server running on port 3000
+[2025-10-17T05:29:36.667Z] [SYSTEM] Health monitor started.
+[2025-10-17T05:29:36.672Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-17T05:29:36.681Z] [SYSTEM] Server running on port 3000
+[2025-10-17T06:16:20.965Z] [SYSTEM] Health monitor started.
+[2025-10-17T06:16:20.969Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-17T06:16:20.979Z] [SYSTEM] Server running on port 3000
+[2025-10-17T14:42:16.879Z] [SYSTEM] Health monitor started.
+[2025-10-17T14:42:16.883Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-17T14:42:16.895Z] [SYSTEM] Server running on port 3000
+[2025-10-18T01:25:28.628Z] [SYSTEM] Health monitor started.
+[2025-10-18T01:25:28.638Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-18T01:25:28.656Z] [SYSTEM] Server running on port 3000
+[2025-10-18T01:31:50.668Z] [WARN] Webhook verification failed
+[2025-10-18T01:36:41.518Z] [SYSTEM] Health monitor started.
+[2025-10-18T01:36:41.521Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-18T01:36:41.532Z] [SYSTEM] Server running on port 3000
+[2025-10-18T01:38:17.652Z] [SYSTEM] Health monitor started.
+[2025-10-18T01:38:18.143Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-18T01:38:18.158Z] [SYSTEM] Server running on port 3000
+[2025-10-18T01:42:20.544Z] [SYSTEM] Health monitor started.
+[2025-10-18T01:42:20.547Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-18T01:42:20.555Z] [SYSTEM] Server running on port 3000
+[2025-10-18T01:46:37.941Z] [SYSTEM] Health monitor started.
+[2025-10-18T01:46:37.945Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-18T01:46:37.956Z] [SYSTEM] Server running on port 3000
+[2025-10-18T01:51:40.468Z] [WARN] Webhook verification failed
+[2025-10-18T01:53:58.263Z] [WARN] Webhook verification failed
+[2025-10-18T01:54:15.202Z] [SYSTEM] Webhook verified!
+[2025-10-18T01:57:47.179Z] [INCOMING] Received from 254712511077: Hell
+[2025-10-18T01:57:48.081Z] [ERROR] GPT error: 401 Incorrect API key provided: Ysk-proj*********************************************************************************************************************************************************-vUA. You can find your API key at https://platform.openai.com/account/api-keys.
+[2025-10-18T01:57:48.844Z] [ERROR] WhatsApp send error: {"error":{"message":"Error validating access token: Session has expired on Friday, 17-Oct-25 10:00:00 PDT. The current time is Friday, 17-Oct-25 18:57:49 PDT.","type":"OAuthException","code":190,"error_subcode":463,"fbtrace_id":"AcofNiteOobFj3iSnjviSsG"}}
+[2025-10-18T01:57:52.788Z] [INCOMING] Received from 254712511077: Hello
+[2025-10-18T01:57:53.486Z] [ERROR] GPT error: 401 Incorrect API key provided: Ysk-proj*********************************************************************************************************************************************************-vUA. You can find your API key at https://platform.openai.com/account/api-keys.
+[2025-10-18T01:57:53.787Z] [ERROR] WhatsApp send error: {"error":{"message":"Error validating access token: Session has expired on Friday, 17-Oct-25 10:00:00 PDT. The current time is Friday, 17-Oct-25 18:57:54 PDT.","type":"OAuthException","code":190,"error_subcode":463,"fbtrace_id":"AN2U-fU_stJVQLGQwgPol3O"}}
+[2025-10-18T02:02:44.406Z] [SYSTEM] Health monitor started.
+[2025-10-18T02:02:44.410Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-18T02:02:44.422Z] [SYSTEM] Server running on port 3000
+[2025-10-18T02:04:17.019Z] [SYSTEM] Health monitor started.
+[2025-10-18T02:04:17.023Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-18T02:04:17.033Z] [SYSTEM] Server running on port 3000
+[2025-10-18T02:11:52.193Z] [SYSTEM] Health monitor started.
+[2025-10-18T02:11:52.196Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-18T02:11:52.206Z] [SYSTEM] Server running on port 3000
+[2025-10-18T02:13:48.332Z] [SYSTEM] Health monitor started.
+[2025-10-18T02:13:48.336Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-18T02:13:48.352Z] [SYSTEM] Server running on port 3000
+[2025-10-18T02:19:19.552Z] [SYSTEM] Health monitor started.
+[2025-10-18T02:19:19.556Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-18T02:19:19.567Z] [SYSTEM] Server running on port 3000
+[2025-10-18T02:27:47.787Z] [SYSTEM] Health monitor started.
+[2025-10-18T02:27:47.790Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-18T02:27:47.796Z] [SYSTEM] Server running on port 3000
+[2025-10-18T02:36:36.248Z] [INCOMING] Received from 254712511077: Hi
+[2025-10-18T02:36:41.912Z] [ERROR] GPT error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[2025-10-18T02:36:45.447Z] [OUTGOING] Message sent successfully to 254712511077
+[2025-10-18T02:37:59.268Z] [INCOMING] Received from 254712511077: Sorry, I’m having trouble understanding you right now.
+[2025-10-18T02:38:02.890Z] [ERROR] GPT error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[2025-10-18T02:38:04.324Z] [OUTGOING] Message sent successfully to 254712511077
+[2025-10-18T02:38:14.820Z] [INCOMING] Received from 254712511077: Hi
+[2025-10-18T02:38:19.113Z] [ERROR] GPT error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[2025-10-18T02:38:20.101Z] [OUTGOING] Message sent successfully to 254712511077
+[2025-10-18T02:39:12.136Z] [INCOMING] Received from 254712511077: Hi
+[2025-10-18T02:39:15.613Z] [ERROR] GPT error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[2025-10-18T02:39:17.112Z] [OUTGOING] Message sent successfully to 254712511077
+[2025-10-18T03:07:03.813Z] [INCOMING] Received from 254117604817: Hi
+[2025-10-18T03:07:07.281Z] [ERROR] GPT error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[2025-10-18T03:07:08.254Z] [ERROR] WhatsApp send error: {"error":{"message":"(#10) Application does not have permission for this action","type":"OAuthException","code":10,"error_data":{"messaging_product":"whatsapp","details":"There was a problem with the access token or permissions you are using for the API call."},"fbtrace_id":"ANHWjtGkep8X8r6c1M8tQYh"}}
+[2025-10-18T03:26:51.985Z] [INCOMING] Received from 254712511077: e2nznaq92pb6cr8
+[2025-10-18T03:26:54.953Z] [ERROR] GPT error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[2025-10-18T03:26:56.679Z] [OUTGOING] Message sent successfully to 254712511077
+[2025-10-18T03:39:21.652Z] [INCOMING] Received from 254712282984: Hi
+[2025-10-18T03:39:25.377Z] [ERROR] GPT error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[2025-10-18T03:39:27.546Z] [OUTGOING] Message sent successfully to 254712282984
+[2025-10-18T03:39:45.292Z] [INCOMING] Received from 254712282984: Morning
+[2025-10-18T03:39:48.469Z] [ERROR] GPT error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[2025-10-18T03:39:50.231Z] [ERROR] WhatsApp send error: {"error":{"message":"(#10) Application does not have permission for this action","type":"OAuthException","code":10,"error_data":{"messaging_product":"whatsapp","details":"There was a problem with the access token or permissions you are using for the API call."},"fbtrace_id":"A7X6aC6A5N6Anw905slNarm"}}
+[2025-10-18T03:40:22.492Z] [INCOMING] Received from 254712282984: Hi
+[2025-10-18T03:40:26.151Z] [ERROR] GPT error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[2025-10-18T03:40:27.183Z] [ERROR] WhatsApp send error: {"error":{"message":"(#10) Application does not have permission for this action","type":"OAuthException","code":10,"error_data":{"messaging_product":"whatsapp","details":"There was a problem with the access token or permissions you are using for the API call."},"fbtrace_id":"AFo3ULxW6DKnqcsBhtMssZS"}}
+[2025-10-18T03:50:02.658Z] [SYSTEM] Health monitor started.
+[2025-10-18T03:50:02.664Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-18T03:50:02.677Z] [SYSTEM] Server running on port 3000
+[2025-10-18T03:50:49.148Z] [SYSTEM] Health monitor started.
+[2025-10-18T03:50:49.151Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-18T03:50:49.161Z] [SYSTEM] Server running on port 3000
+[2025-10-18T09:50:49.419Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-18T14:16:22.960Z] [SYSTEM] Health monitor started.
+[2025-10-18T14:16:22.963Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-18T14:16:22.975Z] [SYSTEM] Server running on port 3000
+[2025-10-18T14:22:57.005Z] [SYSTEM] Health monitor started.
+[2025-10-18T14:22:57.009Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-18T14:22:57.019Z] [SYSTEM] Server running on port 3000
+[2025-10-18T14:30:41.677Z] [SYSTEM] Health monitor started.
+[2025-10-18T14:30:41.680Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-18T14:30:41.690Z] [SYSTEM] Server running on port 3000
+[2025-10-18T14:37:37.845Z] [SYSTEM] Webhook verified!
+[2025-10-18T14:41:02.768Z] [INCOMING] Received from 254702245555: Hi, I am interested in an item
+[2025-10-18T14:41:11.616Z] [ERROR] GPT error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[2025-10-18T14:41:13.384Z] [OUTGOING] Message sent successfully to 254702245555
+[2025-10-18T14:42:19.811Z] [INCOMING] Received from 254702245555: How are you?
+[2025-10-18T14:42:25.487Z] [ERROR] GPT error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[2025-10-18T14:42:26.386Z] [OUTGOING] Message sent successfully to 254702245555
+[2025-10-18T15:37:27.010Z] [SYSTEM] Health monitor started.
+[2025-10-18T15:37:27.102Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-18T15:37:27.349Z] [SYSTEM] Server running on port 3000
+[2025-10-18T15:40:06.958Z] [SYSTEM] Health monitor started.
+[2025-10-18T15:40:06.962Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-18T15:40:07.017Z] [SYSTEM] Server running on port 3000
+[2025-10-18T15:49:23.274Z] [SYSTEM] Health monitor started.
+[2025-10-18T15:49:23.279Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-18T15:49:23.300Z] [SYSTEM] Server running on port 3000
+[2025-10-18T15:57:22.745Z] [SYSTEM] Webhook verified!
+[2025-10-18T16:18:15.501Z] [SYSTEM] Webhook verified!
+[2025-10-18T16:23:42.381Z] [SYSTEM] Webhook verified!
+[2025-10-18T16:32:16.913Z] [SYSTEM] Webhook verified!
+[2025-10-18T16:39:19.091Z] [SYSTEM] Webhook verified!
+[2025-10-18T16:42:07.226Z] [SYSTEM] Webhook verified!
+[2025-10-18T16:56:52.025Z] [SYSTEM] Webhook verified!
+[2025-10-18T17:11:52.445Z] [SYSTEM] Webhook verified!
+[2025-10-18T17:28:24.218Z] [SYSTEM] Webhook verified!
+[2025-10-18T17:29:01.211Z] [SYSTEM] Webhook verified!
+[2025-10-18T17:40:14.568Z] [SYSTEM] Webhook verified!
+[2025-10-18T17:51:15.877Z] [SYSTEM] Webhook verified!
+[2025-10-18T18:25:48.233Z] [SYSTEM] Webhook verified!
+[2025-10-18T18:28:45.115Z] [SYSTEM] Webhook verified!
+[2025-10-18T18:45:15.999Z] [SYSTEM] Webhook verified!
+[2025-10-18T18:59:49.588Z] [SYSTEM] Webhook verified!
+[2025-10-18T19:00:43.944Z] [SYSTEM] Webhook verified!
+[2025-10-18T19:02:03.488Z] [INCOMING] Received from 254712282984: J
+[2025-10-18T19:02:06.970Z] [ERROR] GPT error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[2025-10-18T19:02:07.872Z] [ERROR] WhatsApp send error: {"error":{"message":"Error validating access token: Session has expired on Saturday, 18-Oct-25 10:00:00 PDT. The current time is Saturday, 18-Oct-25 12:02:09 PDT.","type":"OAuthException","code":190,"error_subcode":463,"fbtrace_id":"AS8HQdnfzpzNEKydD_vheY5"}}
+[2025-10-18T19:05:45.998Z] [SYSTEM] Webhook verified!
+[2025-10-18T19:21:04.255Z] [SYSTEM] Webhook verified!
+[2025-10-18T19:41:36.005Z] [INCOMING] Received from 254712282984: Hello
+[2025-10-18T19:41:41.819Z] [ERROR] GPT error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[2025-10-18T19:41:42.642Z] [ERROR] WhatsApp send error: {"error":{"message":"Error validating access token: Session has expired on Saturday, 18-Oct-25 10:00:00 PDT. The current time is Saturday, 18-Oct-25 12:41:44 PDT.","type":"OAuthException","code":190,"error_subcode":463,"fbtrace_id":"AYImY69fLC6BvPB3REQaHEp"}}
+[2025-10-18T19:42:13.274Z] [SYSTEM] Webhook verified!
+[2025-10-18T20:49:37.321Z] [INCOMING] Received from 254712282984: Hi
+[2025-10-18T20:49:43.356Z] [ERROR] GPT error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[2025-10-18T20:49:43.798Z] [ERROR] WhatsApp send error: {"error":{"message":"Error validating access token: Session has expired on Saturday, 18-Oct-25 10:00:00 PDT. The current time is Saturday, 18-Oct-25 13:49:44 PDT.","type":"OAuthException","code":190,"error_subcode":463,"fbtrace_id":"ArJiqvyUEDKfpn5wL44M91C"}}
+[2025-10-18T20:56:08.551Z] [INCOMING] Received from 254712282984: Hello
+[2025-10-18T20:56:13.594Z] [ERROR] GPT error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[2025-10-18T20:56:14.815Z] [ERROR] WhatsApp send error: {"error":{"message":"Error validating access token: Session has expired on Saturday, 18-Oct-25 10:00:00 PDT. The current time is Saturday, 18-Oct-25 13:56:14 PDT.","type":"OAuthException","code":190,"error_subcode":463,"fbtrace_id":"A9rA_og-GitozPKh8KfgmV7"}}
+[2025-10-18T21:04:20.121Z] [SYSTEM] Webhook verified!
+[2025-10-18T21:39:21.923Z] [SYSTEM] Webhook verified!
+[2025-10-18T21:49:24.582Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-18T22:09:43.390Z] [SYSTEM] Webhook verified!
+[2025-10-20T15:49:01.360Z] [SYSTEM] Health monitor started.
+[2025-10-20T15:49:01.365Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-20T15:49:01.381Z] [SYSTEM] Server running on port 3000
+[2025-10-20T15:54:35.783Z] [SYSTEM] Webhook verified!
+[2025-10-20T15:55:51.044Z] [INCOMING] Received from 254117604817: Hi
+[2025-10-20T15:55:55.408Z] [ERROR] GPT error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[2025-10-20T15:55:57.200Z] [OUTGOING] Message sent successfully to 254117604817
+[2025-10-20T15:56:23.536Z] [INCOMING] Received from 254117604817: How are you
+[2025-10-20T15:56:27.909Z] [ERROR] GPT error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[2025-10-20T15:56:28.938Z] [OUTGOING] Message sent successfully to 254117604817
+[2025-10-20T15:56:44.574Z] [INCOMING] Received from 254117604817: I see you are working
+[2025-10-20T15:56:48.802Z] [ERROR] GPT error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[2025-10-20T15:56:50.845Z] [OUTGOING] Message sent successfully to 254117604817
+[2025-10-20T15:57:28.155Z] [INCOMING] Received from 254117604817: Hello
+[2025-10-20T15:57:31.300Z] [ERROR] GPT error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[2025-10-20T15:57:32.427Z] [OUTGOING] Message sent successfully to 254117604817
+[2025-10-20T16:00:46.385Z] [INCOMING] Received from 254117604817: Yoh niaje
+[2025-10-20T16:00:49.836Z] [ERROR] GPT error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[2025-10-20T16:00:51.486Z] [OUTGOING] Message sent successfully to 254117604817
+[2025-10-20T16:01:30.442Z] [INCOMING] Received from 254117604817: Ati
+[2025-10-20T16:01:33.711Z] [ERROR] GPT error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[2025-10-20T16:01:34.736Z] [OUTGOING] Message sent successfully to 254117604817
+[2025-10-24T06:58:03.305Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:03.323Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:03.337Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:04.236Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:04.241Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:04.251Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:05.062Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:05.066Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:05.082Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:05.895Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:05.900Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:05.910Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:06.725Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:06.735Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:06.743Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:07.573Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:07.581Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:07.590Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:08.442Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:08.447Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:08.461Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:09.329Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:09.332Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:09.344Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:10.267Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:10.271Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:10.288Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:11.163Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:11.169Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:11.180Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:12.114Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:12.120Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:12.129Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:13.062Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:13.067Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:13.079Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:13.929Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:13.933Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:13.942Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:14.813Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:14.816Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:14.828Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:15.696Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:15.700Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:15.711Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:16.647Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:16.650Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:16.662Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:17.578Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:17.584Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:17.593Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:18.409Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:18.414Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:18.425Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:19.315Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:19.319Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:19.328Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:20.142Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:20.146Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:20.160Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:21.026Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:21.031Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:21.053Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:21.877Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:21.884Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:21.892Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:22.842Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:22.847Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:22.862Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:23.705Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:23.710Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:23.721Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:24.544Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:24.547Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:24.558Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:25.447Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:25.455Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:25.464Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:26.407Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:26.416Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:26.424Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:27.344Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:27.348Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:27.360Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:28.269Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:28.276Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:28.287Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:29.119Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:29.124Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:29.138Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:30.014Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:30.017Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:30.030Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:30.975Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:30.983Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:30.994Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:31.879Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:31.884Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:31.895Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:32.884Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:32.892Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:32.907Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:33.797Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:33.803Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:33.813Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:34.645Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:34.649Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:34.657Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:35.519Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:35.523Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:35.534Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:36.421Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:36.426Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:36.436Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:37.382Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:37.387Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:37.396Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:38.346Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:38.349Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:38.362Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:39.175Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:39.180Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:39.188Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:40.112Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:40.115Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:40.123Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:41.136Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:41.139Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:41.150Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:42.369Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:42.373Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:42.383Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:43.307Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:43.312Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:43.323Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:44.193Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:44.197Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:44.217Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:45.095Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:45.102Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:45.111Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:46.122Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:46.128Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:46.139Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:47.395Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:47.398Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:47.407Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:48.427Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:48.430Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:48.438Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:49.277Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:49.280Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:49.294Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:50.164Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:50.169Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:50.182Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:51.112Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:51.116Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:51.124Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:52.046Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:52.051Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:52.067Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:53.039Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:53.045Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:53.054Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:53.904Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:53.908Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:53.919Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:55.114Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:55.121Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:55.130Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:56.072Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:56.079Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:56.101Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:57.035Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:57.041Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:57.055Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:58.326Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:58.329Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:58.340Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:58:59.204Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:58:59.208Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:58:59.229Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:00.382Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:00.392Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:00.433Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:01.589Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:01.596Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:01.613Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:02.793Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:02.796Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:02.831Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:04.211Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:04.217Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:04.233Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:05.254Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:05.257Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:05.274Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:06.285Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:06.289Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:06.305Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:07.254Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:07.257Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:07.269Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:08.453Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:08.457Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:08.471Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:09.357Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:09.363Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:09.374Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:10.364Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:10.371Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:10.384Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:11.398Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:11.401Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:11.412Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:12.357Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:12.363Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:12.371Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:13.305Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:13.310Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:13.322Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:14.661Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:14.665Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:14.684Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:15.665Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:15.669Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:15.683Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:17.025Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:17.036Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:17.054Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:18.232Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:18.237Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:18.256Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:19.304Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:19.312Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:19.327Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:20.349Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:20.353Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:20.364Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:21.373Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:21.380Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:21.400Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:22.396Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:22.402Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:22.417Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:23.437Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:23.444Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:23.454Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:24.544Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:24.551Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:24.565Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:25.509Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:25.513Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:25.530Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:26.375Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:26.379Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:26.390Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:27.242Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:27.247Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:27.258Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:28.133Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:28.137Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:28.146Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:29.142Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:29.145Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:29.161Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:30.158Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:30.162Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:30.176Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:31.347Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:31.373Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:31.395Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:32.409Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:32.412Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:32.421Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:33.332Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:33.336Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:33.350Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:34.211Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:34.214Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:34.222Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:35.179Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:35.182Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:35.193Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:36.054Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:36.059Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:36.072Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:37.099Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:37.104Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:37.115Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:38.120Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:38.126Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:38.138Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:39.011Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:39.018Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:39.033Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:39.989Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:39.994Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:40.002Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:41.120Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:41.126Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:41.138Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:42.009Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:42.013Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:42.022Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:42.879Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:42.882Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:42.891Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:43.749Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:43.752Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:43.764Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:44.644Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:44.647Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:44.656Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:45.641Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:45.645Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:45.668Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:46.663Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:46.667Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:46.688Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:47.648Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:47.652Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:47.665Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:48.552Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:48.556Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:48.572Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:49.483Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:49.487Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:49.502Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:50.396Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:50.399Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:50.409Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:51.327Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:51.331Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:51.338Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:52.325Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:52.329Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:52.339Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:53.208Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:53.212Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:53.220Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:54.066Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:54.070Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:54.080Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:54.928Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:54.931Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:54.940Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:55.811Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:55.815Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:55.826Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:56.717Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:56.721Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:56.733Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:57.687Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:57.694Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:57.704Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:58.625Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:58.629Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:58.641Z] [SYSTEM] Server running on port 3000
+[2025-10-24T06:59:59.560Z] [SYSTEM] Health monitor started.
+[2025-10-24T06:59:59.564Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T06:59:59.573Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:00.592Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:00.604Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:00.622Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:01.728Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:01.731Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:01.739Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:02.628Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:02.631Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:02.640Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:03.512Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:03.516Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:03.534Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:04.654Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:04.660Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:04.670Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:05.582Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:05.591Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:05.614Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:06.548Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:07.041Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:07.053Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:07.944Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:07.947Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:07.957Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:08.828Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:08.831Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:08.841Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:09.843Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:09.846Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:09.856Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:10.736Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:10.744Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:10.755Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:11.618Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:11.625Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:11.639Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:13.499Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:13.502Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:13.511Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:14.714Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:14.717Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:14.732Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:15.906Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:15.914Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:15.932Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:17.141Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:17.145Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:17.158Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:18.197Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:18.202Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:18.213Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:19.120Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:19.746Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:19.781Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:20.724Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:20.727Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:20.736Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:22.785Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:22.789Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:22.807Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:23.815Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:23.819Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:23.831Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:25.625Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:25.631Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:25.648Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:26.759Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:26.773Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:26.817Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:27.795Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:27.799Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:27.810Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:29.005Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:29.009Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:29.021Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:29.941Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:29.945Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:29.959Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:30.920Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:30.924Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:30.938Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:31.978Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:31.982Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:31.995Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:33.235Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:33.239Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:33.253Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:34.266Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:34.272Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:34.282Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:35.157Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:35.162Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:35.176Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:36.125Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:36.129Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:36.139Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:38.013Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:38.016Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:38.026Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:39.156Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:39.159Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:39.173Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:40.108Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:40.112Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:40.123Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:41.807Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:41.810Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:41.822Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:42.901Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:42.905Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:42.925Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:44.250Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:44.263Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:44.283Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:45.381Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:45.388Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:45.400Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:46.391Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:46.401Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:46.415Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:47.548Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:47.558Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:47.576Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:48.886Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:48.891Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:48.899Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:50.078Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:50.083Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T07:00:50.095Z] [SYSTEM] Server running on port 3000
+[2025-10-24T07:00:51.050Z] [SYSTEM] Health monitor started.
+[2025-10-24T07:00:51.056Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T14:25:08.647Z] [SYSTEM] Health monitor started.
+[2025-10-24T14:25:08.653Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T14:25:08.668Z] [SYSTEM] Server running on port 3000
+[2025-10-24T14:25:09.816Z] [SYSTEM] Health monitor started.
+[2025-10-24T14:25:09.821Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T14:25:09.834Z] [SYSTEM] Server running on port 3000
+[2025-10-24T14:25:11.046Z] [SYSTEM] Health monitor started.
+[2025-10-24T14:25:11.125Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T14:25:11.136Z] [SYSTEM] Server running on port 3000
+[2025-10-24T14:25:12.150Z] [SYSTEM] Health monitor started.
+[2025-10-24T14:25:12.158Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T14:25:12.178Z] [SYSTEM] Server running on port 3000
+[2025-10-24T14:25:13.859Z] [SYSTEM] Health monitor started.
+[2025-10-24T14:25:13.866Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T14:25:13.880Z] [SYSTEM] Server running on port 3000
+[2025-10-24T14:25:16.545Z] [SYSTEM] Health monitor started.
+[2025-10-24T14:25:16.586Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T14:25:16.610Z] [SYSTEM] Server running on port 3000
+[2025-10-24T14:25:23.148Z] [SYSTEM] Health monitor started.
+[2025-10-24T14:25:23.153Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T14:25:23.177Z] [SYSTEM] Server running on port 3000
+[2025-10-24T14:25:25.026Z] [SYSTEM] Health monitor started.
+[2025-10-24T14:25:25.030Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T14:25:25.047Z] [SYSTEM] Server running on port 3000
+[2025-10-24T14:25:27.007Z] [SYSTEM] Health monitor started.
+[2025-10-24T14:25:27.011Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T14:25:27.025Z] [SYSTEM] Server running on port 3000
+[2025-10-24T14:26:18.824Z] [SYSTEM] Health monitor started.
+[2025-10-24T14:26:18.840Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T14:26:18.852Z] [SYSTEM] Server running on port 3000
+[2025-10-24T14:26:19.768Z] [SYSTEM] Health monitor started.
+[2025-10-24T14:26:19.771Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T14:26:19.786Z] [SYSTEM] Server running on port 3000
+[2025-10-24T14:26:20.803Z] [SYSTEM] Health monitor started.
+[2025-10-24T14:26:20.807Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T14:26:20.819Z] [SYSTEM] Server running on port 3000
+[2025-10-24T14:26:21.842Z] [SYSTEM] Health monitor started.
+[2025-10-24T14:26:21.846Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T14:26:21.865Z] [SYSTEM] Server running on port 3000
+[2025-10-24T14:26:23.051Z] [SYSTEM] Health monitor started.
+[2025-10-24T14:26:23.055Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T14:26:23.068Z] [SYSTEM] Server running on port 3000
+[2025-10-24T14:26:23.965Z] [SYSTEM] Health monitor started.
+[2025-10-24T14:26:24.147Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T14:26:24.174Z] [SYSTEM] Server running on port 3000
+[2025-10-24T14:26:25.321Z] [SYSTEM] Health monitor started.
+[2025-10-24T14:26:25.325Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T14:26:25.347Z] [SYSTEM] Server running on port 3000
+[2025-10-24T14:26:26.266Z] [SYSTEM] Health monitor started.
+[2025-10-24T14:26:26.270Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T14:26:26.281Z] [SYSTEM] Server running on port 3000
+[2025-10-24T14:26:27.466Z] [SYSTEM] Health monitor started.
+[2025-10-24T14:26:27.472Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T14:26:27.488Z] [SYSTEM] Server running on port 3000
+[2025-10-24T14:26:28.584Z] [SYSTEM] Health monitor started.
+[2025-10-24T14:26:28.587Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T14:26:28.599Z] [SYSTEM] Server running on port 3000
+[2025-10-24T14:26:30.094Z] [SYSTEM] Health monitor started.
+[2025-10-24T14:26:30.129Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T14:26:30.145Z] [SYSTEM] Server running on port 3000
+[2025-10-24T14:26:31.118Z] [SYSTEM] Health monitor started.
+[2025-10-24T14:26:31.122Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T14:26:31.134Z] [SYSTEM] Server running on port 3000
+[2025-10-24T14:26:32.101Z] [SYSTEM] Health monitor started.
+[2025-10-24T14:26:32.106Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T14:26:32.116Z] [SYSTEM] Server running on port 3000
+[2025-10-24T14:26:33.152Z] [SYSTEM] Health monitor started.
+[2025-10-24T14:26:33.156Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T14:26:33.169Z] [SYSTEM] Server running on port 3000
+[2025-10-24T14:26:34.226Z] [SYSTEM] Health monitor started.
+[2025-10-24T14:26:34.232Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T14:26:34.247Z] [SYSTEM] Server running on port 3000
+[2025-10-24T14:32:51.847Z] [SYSTEM] Health monitor started.
+[2025-10-24T14:32:51.853Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T14:32:51.871Z] [SYSTEM] Server running on port 3000
+[2025-10-24T14:45:40.467Z] [SYSTEM] Health monitor started.
+[2025-10-24T14:45:40.474Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T14:45:40.490Z] [SYSTEM] Server running on port 3000
+[2025-10-24T14:45:44.579Z] [SYSTEM] Health monitor started.
+[2025-10-24T14:45:44.583Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T14:45:44.595Z] [SYSTEM] Server running on port 3000
+[2025-10-24T15:23:37.844Z] [SYSTEM] Health monitor started.
+[2025-10-24T15:23:37.850Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T15:23:37.870Z] [SYSTEM] Server running on port 3000
+[2025-10-24T15:28:36.982Z] [SYSTEM] Health monitor started.
+[2025-10-24T15:28:36.986Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T15:28:37.001Z] [SYSTEM] Server running on port 3000
+[2025-10-24T15:35:06.286Z] [SYSTEM] Health monitor started.
+[2025-10-24T15:35:06.290Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-24T15:35:06.302Z] [SYSTEM] Server running on port 3000
+[2025-10-27T11:27:17.497Z] [SYSTEM] Health monitor started.
+[2025-10-27T11:27:17.504Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-27T11:27:17.586Z] [SYSTEM] Server running on port 3000
+[2025-10-29T17:39:45.433Z] [SYSTEM] Health monitor started.
+[2025-10-29T17:39:45.443Z] [SYSTEM] ✅ Manual health check recorded.
+[2025-10-29T17:39:45.649Z] [SYSTEM] Server running on port 3000
+[2025-10-29T18:24:45.576Z] [ERROR] Retry job failed: TypeError: fetch failed
+[2025-10-29T18:29:45.580Z] [ERROR] Retry job failed: TypeError: fetch failed
+[2025-10-29T18:34:45.598Z] [ERROR] Retry job failed: TypeError: fetch failed
+[2026-02-05T22:04:04.126Z] [SYSTEM] Health monitor started.
+[2026-02-05T22:04:04.133Z] [SYSTEM] ✅ Manual health check recorded.
+[2026-02-05T22:04:04.298Z] [SYSTEM] Server running on port 3000
+[2026-02-07T13:48:47.877Z] [SYSTEM] Health monitor started.
+[2026-02-07T13:48:47.885Z] [SYSTEM] ✅ Manual health check recorded.
+[2026-02-07T13:48:47.971Z] [SYSTEM] Server running on port 3000
+[2026-02-07T15:00:02.877Z] [SYSTEM] Health monitor started.
+[2026-02-07T15:00:02.885Z] [SYSTEM] ✅ Manual health check recorded.
+[2026-02-07T15:00:03.084Z] [SYSTEM] Server running on port 3000
+[2026-02-07T15:21:43.304Z] [SYSTEM] Health monitor started.
+[2026-02-07T15:21:43.311Z] [SYSTEM] ✅ Manual health check recorded.
+[2026-02-07T15:21:43.403Z] [SYSTEM] Server running on port 3000
+[2026-02-07T15:22:55.022Z] [SYSTEM] Health monitor started.
+[2026-02-07T15:22:55.028Z] [SYSTEM] ✅ Manual health check recorded.
+[2026-02-07T15:22:55.111Z] [SYSTEM] Server running on port 3000
+[2026-02-07T15:26:04.494Z] [SYSTEM] Health monitor started.
+[2026-02-07T15:26:04.499Z] [SYSTEM] ✅ Manual health check recorded.
+[2026-02-07T15:26:04.582Z] [SYSTEM] Server running on port 3000
+[2026-02-07T15:56:03.456Z] [SYSTEM] Health monitor started.
+[2026-02-07T15:56:03.464Z] [SYSTEM] ✅ Manual health check recorded.
+[2026-02-07T15:56:03.578Z] [SYSTEM] Server running on port 3000
+[2026-02-07T16:02:15.976Z] [SYSTEM] Health monitor started.
+[2026-02-07T16:02:15.986Z] [SYSTEM] ✅ Manual health check recorded.
+[2026-02-07T16:02:16.064Z] [SYSTEM] Server running on port 3000
+[2026-02-07T16:07:11.897Z] [SYSTEM] Health monitor started.
+[2026-02-07T16:07:11.902Z] [SYSTEM] ✅ Manual health check recorded.
+[2026-02-07T16:07:11.995Z] [SYSTEM] Server running on port 3000
+[2026-02-07T16:12:44.671Z] [SYSTEM] Health monitor started.
+[2026-02-07T16:12:44.677Z] [SYSTEM] ✅ Manual health check recorded.
+[2026-02-07T16:12:44.906Z] [SYSTEM] Server running on port 3000
+[2026-02-07T20:16:56.467Z] [SYSTEM] Health monitor started.
+[2026-02-07T20:16:56.478Z] [SYSTEM] ✅ Manual health check recorded.
+[2026-02-07T20:16:56.715Z] [SYSTEM] Server running on port 3000
+[2026-02-07T20:39:44.890Z] [SYSTEM] Health monitor started.
+[2026-02-07T20:39:44.902Z] [SYSTEM] ✅ Manual health check recorded.
+[2026-02-07T20:39:45.771Z] [SYSTEM] Server running on port 3000
+[2026-02-07T20:58:10.230Z] [SYSTEM] Health monitor started.
+[2026-02-07T20:58:10.238Z] [SYSTEM] ✅ Manual health check recorded.
+[2026-02-07T20:58:10.368Z] [SYSTEM] Server running on port 3000
+[2026-02-07T21:09:00.769Z] [SYSTEM] Health monitor started.
+[2026-02-07T21:09:00.775Z] [SYSTEM] ✅ Manual health check recorded.
+[2026-02-07T21:09:00.859Z] [SYSTEM] Server running on port 3000
+[2026-02-07T21:14:51.902Z] [SYSTEM] Health monitor started.
+[2026-02-07T21:14:51.909Z] [SYSTEM] ✅ Manual health check recorded.
+[2026-02-07T21:14:51.986Z] [SYSTEM] Server running on port 3000
+[2026-02-07T21:17:51.986Z] [SYSTEM] Health monitor started.
+[2026-02-07T21:17:51.996Z] [SYSTEM] ✅ Manual health check recorded.
+[2026-02-07T21:17:52.072Z] [SYSTEM] Server running on port 3000
+[2026-02-08T04:09:21.174Z] [SYSTEM] ✅ Manual health check recorded.
+[2026-02-08T04:09:22.373Z] [SYSTEM] ✅ Manual health check recorded.
+[2026-02-08T04:09:22.375Z] [SYSTEM] ✅ Manual health check recorded.
+[2026-02-08T04:09:22.557Z] [SYSTEM] ✅ Manual health check recorded.
+[2026-02-08T04:09:22.640Z] [ERROR] Retry job failed: TypeError: fetch failed
+[2026-02-08T04:09:22.585Z] [ERROR] Retry job failed: TypeError: fetch failed
+[2026-02-08T04:09:22.711Z] [ERROR] Retry job failed: TypeError: fetch failed
+[2026-02-08T04:09:22.825Z] [ERROR] Retry job failed: TypeError: fetch failed
+[2026-02-08T04:14:21.185Z] [ERROR] Retry job failed: TypeError: fetch failed
+[2026-02-08T04:14:22.381Z] [ERROR] Retry job failed: TypeError: fetch failed
+[2026-02-08T04:14:22.397Z] [ERROR] Retry job failed: TypeError: fetch failed
+[2026-02-08T04:14:22.402Z] [ERROR] Retry job failed: TypeError: fetch failed
+[2026-02-08T04:19:21.197Z] [ERROR] Retry job failed: TypeError: fetch failed
+[2026-02-08T04:19:22.387Z] [ERROR] Retry job failed: TypeError: fetch failed
+[2026-02-08T04:19:22.405Z] [ERROR] Retry job failed: TypeError: fetch failed
+[2026-02-08T04:19:22.407Z] [ERROR] Retry job failed: TypeError: fetch failed
+[2026-02-08T04:24:21.213Z] [ERROR] Retry job failed: TypeError: fetch failed
+[2026-02-08T04:24:22.394Z] [ERROR] Retry job failed: TypeError: fetch failed
+[2026-02-08T04:24:22.409Z] [ERROR] Retry job failed: TypeError: fetch failed
+[2026-02-08T04:24:22.415Z] [ERROR] Retry job failed: TypeError: fetch failed
+[2026-02-08T04:43:03.226Z] [ERROR] Retry job failed: TypeError: fetch failed
+[2026-02-08T04:43:03.235Z] [ERROR] Retry job failed: TypeError: fetch failed
+[2026-02-08T04:43:03.234Z] [ERROR] Retry job failed: TypeError: fetch failed
+[2026-02-08T04:43:03.234Z] [ERROR] Retry job failed: TypeError: fetch failed
+[2026-02-08T04:46:22.606Z] [SYSTEM] Health monitor started.
+[2026-02-08T04:46:22.613Z] [SYSTEM] ✅ Manual health check recorded.
+[2026-02-08T04:46:22.686Z] [SYSTEM] Server running on port 3000
+[2026-02-08T04:47:29.185Z] [WARN] Webhook verification failed
+[2026-02-08T04:47:31.495Z] [WARN] Tenant lookup error for 254700000001: Could not find the table 'public.alphadome.bot_tenants' in the schema cache
+[2026-02-08T04:47:31.501Z] [INCOMING] Received from 254700000001: What are your business hours?
+[2026-02-08T04:47:32.252Z] [SYSTEM] New user created: 254700000001
+[2026-02-08T04:47:38.001Z] [ERROR] openai error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[2026-02-08T04:47:38.188Z] [ERROR] OpenRouter error: getaddrinfo ENOTFOUND api.openrouter.ai
+[2026-02-08T04:47:39.971Z] [AI] ✓ HuggingFace reply: Hello! As a WhatsApp assistant for Alphadome, I'm ...
+[2026-02-08T04:47:42.103Z] [OUTGOING] ✅ Message sent successfully to 254700000001
+[2026-02-08T04:47:44.063Z] [WARN] Tenant lookup error for 254700000002: Could not find the table 'public.alphadome.bot_tenants' in the schema cache
+[2026-02-08T04:47:44.066Z] [INCOMING] Received from 254700000002: Hello world
+[2026-02-08T04:47:44.984Z] [SYSTEM] New user created: 254700000002
+[2026-02-08T04:47:48.672Z] [ERROR] openai error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[2026-02-08T04:47:48.710Z] [ERROR] OpenRouter error: getaddrinfo ENOTFOUND api.openrouter.ai
+[2026-02-08T04:47:50.205Z] [AI] ✓ HuggingFace reply: Hello! Welcome to Alphadome. How can I help you to...
+[2026-02-08T04:47:52.275Z] [OUTGOING] ✅ Message sent successfully to 254700000002
+[2026-02-08T04:47:53.812Z] [WARN] Tenant lookup error for 254700000001: Could not find the table 'public.alphadome.bot_tenants' in the schema cache
+[2026-02-08T04:47:53.819Z] [INCOMING] Received from 254700000001: Message 2
+[2026-02-08T04:47:53.871Z] [WARN] Tenant lookup error for 254700000000: Could not find the table 'public.alphadome.bot_tenants' in the schema cache
+[2026-02-08T04:47:53.879Z] [INCOMING] Received from 254700000000: Message 1
+[2026-02-08T04:47:54.016Z] [WARN] Tenant lookup error for 254700000002: Could not find the table 'public.alphadome.bot_tenants' in the schema cache
+[2026-02-08T04:47:54.022Z] [INCOMING] Received from 254700000002: Message 3
+[2026-02-08T04:47:54.715Z] [SYSTEM] New user created: 254700000000
+[2026-02-08T04:47:58.767Z] [ERROR] openai error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[2026-02-08T04:47:58.794Z] [ERROR] openai error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[2026-02-08T04:47:58.830Z] [ERROR] OpenRouter error: getaddrinfo ENOTFOUND api.openrouter.ai
+[2026-02-08T04:47:58.844Z] [ERROR] OpenRouter error: getaddrinfo ENOTFOUND api.openrouter.ai
+[2026-02-08T04:48:00.344Z] [AI] ✓ HuggingFace reply: Hello! Welcome to Alphadome. I'm here to help you ...
+[2026-02-08T04:48:00.358Z] [ERROR] openai error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[2026-02-08T04:48:00.364Z] [ERROR] OpenRouter error: getaddrinfo ENOTFOUND api.openrouter.ai
+[2026-02-08T04:48:00.373Z] [AI] ✓ HuggingFace reply: What can I assist you with today? Would you like t...
+[2026-02-08T04:48:01.597Z] [AI] ✓ HuggingFace reply: Hello Alphadome, welcome to our community! How can...
+[2026-02-08T04:48:01.644Z] [OUTGOING] ✅ Message sent successfully to 254700000001
+[2026-02-08T04:48:01.775Z] [OUTGOING] ✅ Message sent successfully to 254700000002
+[2026-02-08T04:48:03.107Z] [OUTGOING] ✅ Message sent successfully to 254700000000
+[2026-02-08T04:48:04.191Z] [DEBUG] Webhook received non-message event
+[2026-02-08T04:48:07.243Z] [SYSTEM] Health monitor started.
+[2026-02-08T04:48:07.263Z] [SYSTEM] ✅ Manual health check recorded.
+[2026-02-08T04:48:07.373Z] [SYSTEM] Server running on port 3000
+[2026-02-08T05:00:53.159Z] [SYSTEM] Webhook verified!
+[2026-02-08T05:00:54.176Z] [WARN] Tenant lookup error for 254700000001: Could not find the table 'public.alphadome.bot_tenants' in the schema cache
+[2026-02-08T05:00:54.184Z] [INCOMING] Received from 254700000001: What are your business hours?
+[2026-02-08T05:00:58.154Z] [ERROR] openai error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[2026-02-08T05:00:58.206Z] [ERROR] OpenRouter error: getaddrinfo ENOTFOUND api.openrouter.ai
+[2026-02-08T05:01:01.018Z] [AI] ✓ HuggingFace reply: Hello! I'm here to assist you 24/7. You can reach ...
+[2026-02-08T05:01:02.451Z] [OUTGOING] ✅ Message sent successfully to 254700000001
+[2026-02-08T05:01:03.895Z] [WARN] Tenant lookup error for 254700000002: Could not find the table 'public.alphadome.bot_tenants' in the schema cache
+[2026-02-08T05:01:03.901Z] [INCOMING] Received from 254700000002: Hello world
+[2026-02-08T05:01:08.457Z] [ERROR] openai error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[2026-02-08T05:01:08.467Z] [ERROR] OpenRouter error: getaddrinfo ENOTFOUND api.openrouter.ai
+[2026-02-08T05:01:10.756Z] [AI] ✓ HuggingFace reply: Hello! Welcome to Alphadome's community. We're exc...
+[2026-02-08T05:01:12.291Z] [OUTGOING] ✅ Message sent successfully to 254700000002
+[2026-02-08T05:01:13.638Z] [WARN] Tenant lookup error for 254700000000: Could not find the table 'public.alphadome.bot_tenants' in the schema cache
+[2026-02-08T05:01:13.671Z] [INCOMING] Received from 254700000000: Message 1
+[2026-02-08T05:01:13.833Z] [WARN] Tenant lookup error for 254700000002: Could not find the table 'public.alphadome.bot_tenants' in the schema cache
+[2026-02-08T05:01:13.840Z] [INCOMING] Received from 254700000002: Message 3
+[2026-02-08T05:01:13.937Z] [WARN] Tenant lookup error for 254700000001: Could not find the table 'public.alphadome.bot_tenants' in the schema cache
+[2026-02-08T05:01:13.943Z] [INCOMING] Received from 254700000001: Message 2
+[2026-02-08T05:01:17.517Z] [ERROR] openai error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[2026-02-08T05:01:17.547Z] [ERROR] openai error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[2026-02-08T05:01:17.576Z] [ERROR] OpenRouter error: getaddrinfo ENOTFOUND api.openrouter.ai
+[2026-02-08T05:01:17.593Z] [ERROR] OpenRouter error: getaddrinfo ENOTFOUND api.openrouter.ai
+[2026-02-08T05:01:17.683Z] [ERROR] openai error: 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, read the docs: https://platform.openai.com/docs/guides/error-codes/api-errors.
+[2026-02-08T05:01:17.702Z] [ERROR] OpenRouter error: getaddrinfo ENOTFOUND api.openrouter.ai
+[2026-02-08T05:01:19.255Z] [AI] ✓ HuggingFace reply: Hello! Welcome to Alphadome's WhatsApp support. Ho...
+[2026-02-08T05:01:19.263Z] [AI] ✓ HuggingFace reply: What can I help you with today at Alphadome?...
+[2026-02-08T05:01:19.359Z] [AI] ✓ HuggingFace reply: Hello! Welcome to Alphadome's WhatsApp channel. I'...
+[2026-02-08T05:01:20.589Z] [OUTGOING] ✅ Message sent successfully to 254700000001
+[2026-02-08T05:01:20.641Z] [OUTGOING] ✅ Message sent successfully to 254700000002
+[2026-02-08T05:01:20.679Z] [OUTGOING] ✅ Message sent successfully to 254700000000
+[2026-02-08T05:01:22.460Z] [DEBUG] Webhook received non-message event
+[2026-02-08T06:08:03.820Z] [ERROR] Retry job failed: TypeError: fetch failed
+[2026-02-08T06:08:03.832Z] [ERROR] Retry job failed: TypeError: fetch failed
+[2026-02-08T06:08:03.835Z] [ERROR] Retry job failed: TypeError: fetch failed
+[2026-02-08T06:08:03.840Z] [ERROR] Retry job failed: TypeError: fetch failed
+[2026-02-08T06:13:03.453Z] [ERROR] Retry job failed: TypeError: fetch failed
+[2026-02-08T06:13:03.454Z] [ERROR] Retry job failed: TypeError: fetch failed
+[2026-02-08T06:13:03.456Z] [ERROR] Retry job failed: TypeError: fetch failed
+[2026-02-08T06:13:03.504Z] [ERROR] Retry job failed: TypeError: fetch failed
